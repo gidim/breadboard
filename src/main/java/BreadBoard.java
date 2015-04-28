@@ -3,6 +3,7 @@ import Tutorial.Hole;
 
 import javax.media.jai.*;
 import java.awt.*;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.Raster;
 import java.awt.image.SampleModel;
@@ -20,6 +21,7 @@ public class BreadBoard {
     //fields
     private Color[][] rawMatrix; //raw matrix
     private Hole[][] holeMatrix; //hole matrix
+    Rectangle2D boundingBox;
 
     /**
      * Constructor.
@@ -30,6 +32,7 @@ public class BreadBoard {
 
         rawMatrix = imageToMatrix(bImage);
         holeMatrix = initHoleMatrix();
+        boundingBox = getBoundingBox();
 
     }
 
@@ -100,4 +103,7 @@ public class BreadBoard {
         return mat;
     }
 
+    public Rectangle2D getBoundingBox() {
+        return boundingBox;
+    }
 }
