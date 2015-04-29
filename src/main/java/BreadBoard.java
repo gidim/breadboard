@@ -49,7 +49,7 @@ public class BreadBoard {
 
         //going cols->rows here because num of rows dependant on which col we're on
         for (int j = 0; j < NUM_OF_COLS; j++) {
-            int currentRowNum = ((j > 1) || (j < 12)) ? NUM_OF_ROWS : NUM_OF_ROWS_SIDES;
+            int currentRowNum = ((j > 1) && (j < 12)) ? NUM_OF_ROWS : NUM_OF_ROWS_SIDES;
             for (int i = 0; i < currentRowNum; i++) {
                 mat[i][j] = new Hole(i, j);
             }
@@ -57,17 +57,6 @@ public class BreadBoard {
             for (int i = currentRowNum; i < NUM_OF_ROWS; i++) {
                 mat[i][j] = null;
             }
-        }
-
-        for (int i = 0; i < NUM_OF_ROWS; i++) {
-            for (int j = 0; j < NUM_OF_COLS; j++) {
-                if (mat[i][j] != null) {
-                    System.out.printf("%s%2d ", mat[i][j].getCol(), mat[i][j].getRow());
-                } else {
-                    System.out.print("n");
-                }
-            }
-            System.out.println();
         }
 
         return mat;
