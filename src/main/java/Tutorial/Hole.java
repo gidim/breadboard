@@ -1,5 +1,6 @@
 package Tutorial;
 
+import java.awt.*;
 import java.awt.geom.Rectangle2D;
 
 /**
@@ -12,19 +13,24 @@ public class Hole {
     private String col;
     private boolean state;
     private Rectangle2D rect;
+    private Color[][] rangedRawMatrix;
     double blackAverage;
 
     public Hole(int rowNum, int colNum) {
         this.row = String.valueOf(rowNum);
         this.col = Hole.colToString(colNum);
         state = false;
-        this.rect = rect;
     }
 
 
     public Hole(int rowNum, int colNum,Rectangle2D rect) {
         this(rowNum,colNum);
-        //this.blackAverage = calculateBlackAverage();
+        this.rect = rect;
+        this.blackAverage = calculateBlackAverage();
+    }
+
+    private double calculateBlackAverage() {
+        return 0;
     }
 
 
