@@ -14,6 +14,7 @@ import java.awt.image.SampleModel;
 public class BreadBoard {
 
     public static final double SAMPLE_AREA_WIDTH = 0.15;
+    public static final int FORGROUND_BG_SENSETIVITY = 10;
     //constants
     final int NUM_OF_ROWS = 63;
     final int NUM_OF_ROWS_SIDES = 50;
@@ -97,6 +98,11 @@ public class BreadBoard {
         return mat;
     }
 
+
+    /**
+     * Calculates the breadboard bounding box
+     * @return Rectangle2D Box
+     */
     public Rectangle2D getBoundingBox() {
         int width = rawMatrix[0].length;
         int height = rawMatrix.length;
@@ -114,12 +120,10 @@ public class BreadBoard {
 
         for (int y = 0; y < rawHeight; y++) {
             for (int x = 0; x < rawWidth; x++) {
-                if (Utils.equalsInRange(rawMatrix[y][x],average)) {
-
+                if (Utils.equalsInRange(rawMatrix[y][x],average, FORGROUND_BG_SENSETIVITY)) {
                     if (bottomY == -1)
                         bottomY = y;
                     topY = y; //always set the bottom value, last time will have the right one
-
                     if (x > topX)
                         topX = x;
                     if (x < bottomX)
@@ -128,14 +132,8 @@ public class BreadBoard {
             }
         }
 
-        Rectangle2D.Double box = new Rectangle.Double(bottomY,bottomX,topY-bottomY,topX-bottomX);
-
+        Rectangle2D.Double box = new Rectangle.Double(bottomX,bottomY,topX-bottomX,topY-bottomY);
         return box;
-
-
-
-
-        return boundingBox;
     }
 
     /**
@@ -157,7 +155,7 @@ public class BreadBoard {
             }
         }
 
-        int numOfPixels = rawHeight*rawWidth;
+        int numOfPixels = (int) (sampleArea.getHeight()*sampleArea.getWidth());
         r /=numOfPixels;
         g /=numOfPixels;
         b /=numOfPixels;
