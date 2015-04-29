@@ -13,6 +13,8 @@ import java.awt.image.SampleModel;
  */
 public class BreadBoard {
 
+    //TL: 130, 21 | BR: 290, 507
+
     //constants
     final int NUM_OF_ROWS = 63;
     final int NUM_OF_ROWS_SIDES = 50;
@@ -21,7 +23,15 @@ public class BreadBoard {
     //fields
     private Color[][] rawMatrix; //raw matrix
     private Hole[][] holeMatrix; //hole matrix
+    private int height;
+    private int width;
     Rectangle2D boundingBox;
+
+    //temp:
+    int TLX = 130;
+    int TLY = 21;
+    int BRX = 290;
+    int BRY = 507;
 
     /**
      * Constructor.
@@ -31,13 +41,14 @@ public class BreadBoard {
     public BreadBoard(BufferedImage bImage) {
 
         rawMatrix = imageToMatrix(bImage);
-        holeMatrix = initHoleMatrix();
+        holeMatrix = getHoleMatrix();
         boundingBox = getBoundingBox();
 
     }
 
     /**
-     * @return
+     * Initiates the hole matrix
+     * @return initiated hole matrix
      */
     private Hole[][] initHoleMatrix() {
         Hole[][] mat = new Hole[NUM_OF_ROWS][NUM_OF_COLS];
@@ -57,6 +68,20 @@ public class BreadBoard {
         return mat;
     }
 
+    private Hole[][] getHoleMatrix() {
+        Hole[][] mat = initHoleMatrix();
+
+        int y = height / 2;
+        int x = TLX;
+        while (x < BRX) {
+            System.out.println(rawMatrix[y][x].getRed() + " " + rawMatrix[y][x].getGreen() + " " + rawMatrix[y][x].getBlue());
+            x++;
+        }
+
+
+        return mat;
+    }
+
     /**
      * Wrap buffered image into planar image and then fill rgb matrix
      *
@@ -64,8 +89,8 @@ public class BreadBoard {
      * @return raw rgb matrix for image
      */
     private Color[][] imageToMatrix(BufferedImage bImage) {
-        int height = bImage.getHeight();
-        int width = bImage.getWidth();
+        height = bImage.getHeight();
+        width = bImage.getWidth();
         Color[][] mat = new Color[height][width];
 
         //PlanarImage pi = JAI.create("fileload", outputFullPath); //using JAI to look at image pixels
