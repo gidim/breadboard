@@ -12,12 +12,21 @@ public class Hole {
     private String col;
     private boolean state;
     private Rectangle2D rect;
+    double blackAverage;
 
     public Hole(int rowNum, int colNum) {
         this.row = String.valueOf(rowNum);
         this.col = Hole.colToString(colNum);
         state = false;
+        this.rect = rect;
     }
+
+
+    public Hole(int rowNum, int colNum,Rectangle2D rect) {
+        this(rowNum,colNum);
+        //this.blackAverage = calculateBlackAverage();
+    }
+
 
     //convert col number to string representation
     public static String colToString(int col) {
