@@ -17,7 +17,9 @@ public class BreadBoard {
 
 
     public static final double SAMPLE_AREA_WIDTH = 0.15;
-    public static final int FORGROUND_BG_SENSETIVITY = 10;
+    public static final int FOREGROUND_BG_SENSITIVITY = 10;
+    public static final int FIRST_RED_LINE_SENSITIVITY = 70;
+    public static final int TRAVERSE_RED_LINE_NUM_OF_PIXELS = 2; //how many pixels to check on each side of red line
 
     //constants
     final int NUM_OF_ROWS = 63;
@@ -82,19 +84,30 @@ public class BreadBoard {
         int y = (int) (boundingBox.getMinY() + boundingBox.getHeight() / 2);
         int x = (int) boundingBox.getMinX();
         //find middle of first red line
-        while (rawMatrix[y][x].getRed() - rawMatrix[y][x].getBlue() < 100) {
+        while (rawMatrix[y][x].getRed() - rawMatrix[y][x].getBlue() < FIRST_RED_LINE_SENSITIVITY) {
             x++;
         }
 
         System.out.println(y);
         //find top of first red line
-        while(Math.abs(rawMatrix[y][x].getRed() - rawMatrix[y][x].getBlue() - rawMatrix[y][x].getGreen()) > 10) {
+        while(hasRedInLine(x, y, TRAVERSE_RED_LINE_NUM_OF_PIXELS)) {
             y--;
         }
 
-        System.out.println(y);
+        System.out.println(y + " " + boundingBox.getMinY());
 
         return x;
+    }
+
+    private boolean hasRedInLine(int x, int y, int numOfPixels) {
+        for(int i = x - numOfPixels; i < x + numOfPixels; i++) {
+            Color c1 = rawMatrix[y][i];
+            if(Utils.getDistinctColor(c1, FIRST_RED_LINE_SENSITIVITY) == Utils.RED) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -154,7 +167,7 @@ public class BreadBoard {
 
         for (int y = 0; y < rawHeight; y++) {
             for (int x = 0; x < rawWidth; x++) {
-                if (Utils.equalsInRange(rawMatrix[y][x],average, FORGROUND_BG_SENSETIVITY)) {
+                if (Utils.equalsInRange(rawMatrix[y][x],average, FOREGROUND_BG_SENSITIVITY)) {
                     if (bottomY == -1)
                         bottomY = y;
                     topY = y; //always set the bottom value, last time will have the right one
