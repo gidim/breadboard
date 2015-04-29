@@ -15,23 +15,21 @@ public class BreadBoard {
 
     //TL: 130, 21 | BR: 290, 507
 
+
+    public static final double SAMPLE_AREA_WIDTH = 0.15;
+    public static final int FORGROUND_BG_SENSETIVITY = 10;
+
     //constants
     final int NUM_OF_ROWS = 63;
     final int NUM_OF_ROWS_SIDES = 50;
     final int NUM_OF_COLS = 14;
 
     //fields
-    private Color[][] rawMatrix; //raw matrix
+    private Color[][] rawMatrix; //raw matrix // Color[row][[col]
+    int rawWidth;
+    int rawHeight;
     private Hole[][] holeMatrix; //hole matrix
-    private int height;
-    private int width;
     Rectangle2D boundingBox;
-
-    //temp:
-    int TLX = 130;
-    int TLY = 21;
-    int BRX = 290;
-    int BRY = 507;
 
     /**
      * Constructor.
@@ -41,8 +39,10 @@ public class BreadBoard {
     public BreadBoard(BufferedImage bImage) {
 
         rawMatrix = imageToMatrix(bImage);
-        holeMatrix = getHoleMatrix();
+        rawWidth = rawMatrix[0].length;
+        rawHeight = rawMatrix.length;
         boundingBox = getBoundingBox();
+        holeMatrix = getHoleMatrix();
 
     }
 
@@ -71,15 +71,30 @@ public class BreadBoard {
     private Hole[][] getHoleMatrix() {
         Hole[][] mat = initHoleMatrix();
 
-        int y = height / 2;
-        int x = TLX;
-        while (x < BRX) {
-            System.out.println(rawMatrix[y][x].getRed() + " " + rawMatrix[y][x].getGreen() + " " + rawMatrix[y][x].getBlue());
+        int x = findFirstHoleX();
+
+        System.out.println(rawMatrix[(int) (boundingBox.getMinY() + boundingBox.getHeight() / 2)][x].getRed() + " " + rawMatrix[(int) (boundingBox.getMinY() + boundingBox.getHeight() / 2)][x].getBlue());
+
+        return mat;
+    }
+
+    private int findFirstHoleX() {
+        int y = (int) (boundingBox.getMinY() + boundingBox.getHeight() / 2);
+        int x = (int) boundingBox.getMinX();
+        //find middle of first red line
+        while (rawMatrix[y][x].getRed() - rawMatrix[y][x].getBlue() < 100) {
             x++;
         }
 
+        System.out.println(y);
+        //find top of first red line
+        while(Math.abs(rawMatrix[y][x].getRed() - rawMatrix[y][x].getBlue() - rawMatrix[y][x].getGreen()) > 10) {
+            y--;
+        }
 
-        return mat;
+        System.out.println(y);
+
+        return x;
     }
 
     /**
@@ -89,8 +104,8 @@ public class BreadBoard {
      * @return raw rgb matrix for image
      */
     private Color[][] imageToMatrix(BufferedImage bImage) {
-        height = bImage.getHeight();
-        width = bImage.getWidth();
+        int height = bImage.getHeight();
+        int width = bImage.getWidth();
         Color[][] mat = new Color[height][width];
 
         //PlanarImage pi = JAI.create("fileload", outputFullPath); //using JAI to look at image pixels
@@ -117,7 +132,70 @@ public class BreadBoard {
         return mat;
     }
 
+
+    /**
+     * Calculates the breadboard bounding box
+     * @return Rectangle2D Box
+     */
     public Rectangle2D getBoundingBox() {
-        return boundingBox;
+        int width = rawMatrix[0].length;
+        int height = rawMatrix.length;
+
+
+        //calculate rgb averages in a center sample area
+        int sampleWidth = (int)(width * SAMPLE_AREA_WIDTH);
+        int sampleheight = sampleWidth;
+        Rectangle2D sampleArea = new Rectangle2D.Double(((width/2)-sampleWidth/2),((height/2)-sampleheight/2),sampleWidth,sampleheight); // a box in the center of the image
+        Color average = getAverageInArea(sampleArea);
+
+        // look for binding box where "white" is the average calculated +/-
+
+        int topX=-1, bottomX=Integer.MAX_VALUE, bottomY=-1, topY=-1;
+
+        for (int y = 0; y < rawHeight; y++) {
+            for (int x = 0; x < rawWidth; x++) {
+                if (Utils.equalsInRange(rawMatrix[y][x],average, FORGROUND_BG_SENSETIVITY)) {
+                    if (bottomY == -1)
+                        bottomY = y;
+                    topY = y; //always set the bottom value, last time will have the right one
+                    if (x > topX)
+                        topX = x;
+                    if (x < bottomX)
+                        bottomX = x;
+                }
+            }
+        }
+
+        Rectangle2D.Double box = new Rectangle.Double(bottomX,bottomY,topX-bottomX,topY-bottomY);
+        return box;
     }
+
+    /**
+     * Calculates an RGB average in a area
+     * @param sampleArea the area to look in
+     * @return Color average
+     */
+    private Color getAverageInArea(Rectangle2D sampleArea) {
+
+        int r = 0;
+        int g = 0;
+        int b = 0;
+
+        for (int y = (int) sampleArea.getMinY(); y < sampleArea.getMaxY(); y++) {
+            for (int x = (int) sampleArea.getMinX(); x < sampleArea.getMaxX(); x++) {
+                r += rawMatrix[y][x].getRed();
+                g += rawMatrix[y][x].getGreen();
+                b += rawMatrix[y][x].getBlue();
+            }
+        }
+
+        int numOfPixels = (int) (sampleArea.getHeight()*sampleArea.getWidth());
+        r /=numOfPixels;
+        g /=numOfPixels;
+        b /=numOfPixels;
+
+        return new Color(r,g,b);
+    }
+
+
 }
