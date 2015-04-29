@@ -52,7 +52,7 @@ public class BreadBoard {
         for (int j = 0; j < NUM_OF_COLS; j++) {
             int currentRowNum = ((j > 1) && (j < 12)) ? NUM_OF_ROWS : NUM_OF_ROWS_SIDES;
             for (int i = 0; i < currentRowNum; i++) {
-                mat[i][j] = new Hole(i, j);
+                mat[i][j] = new Hole(i,j);
             }
             //if we're on the side, fill difference with nulls
             for (int i = currentRowNum; i < NUM_OF_ROWS; i++) {
