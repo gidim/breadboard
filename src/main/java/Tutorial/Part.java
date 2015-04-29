@@ -12,6 +12,7 @@ public abstract class Part {
     String name;
     private String description;
 
+
     public String getName() {
         return name;
     }

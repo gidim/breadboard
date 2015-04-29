@@ -1,0 +1,357 @@
+The system is: Darwin - 13.3.0 - x86_64
+Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
+Compiler: /usr/bin/c++ 
+Build flags: 
+Id flags: 
+
+The output was:
+0
+
+
+Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "a.out"
+
+The CXX compiler identification is AppleClang, found in "/Users/sashabeltinova/Downloads/opencv-2.4.10/build/CMakeFiles/3.1.2/CompilerIdCXX/a.out"
+
+Compiling the C compiler identification source file "CMakeCCompilerId.c" succeeded.
+Compiler: /usr/bin/cc 
+Build flags: 
+Id flags: 
+
+The output was:
+0
+
+
+Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "a.out"
+
+The C compiler identification is AppleClang, found in "/Users/sashabeltinova/Downloads/opencv-2.4.10/build/CMakeFiles/3.1.2/CompilerIdC/a.out"
+
+Determining if the CXX compiler works passed with the following output:
+Change Dir: /Users/sashabeltinova/Downloads/opencv-2.4.10/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec417954104/fast"
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -f CMakeFiles/cmTryCompileExec417954104.dir/build.make CMakeFiles/cmTryCompileExec417954104.dir/build
+/Applications/CMake.app/Contents/bin/cmake -E cmake_progress_report /Users/sashabeltinova/Downloads/opencv-2.4.10/build/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building CXX object CMakeFiles/cmTryCompileExec417954104.dir/testCXXCompiler.cxx.o
+/usr/bin/c++    -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk   -o CMakeFiles/cmTryCompileExec417954104.dir/testCXXCompiler.cxx.o -c /Users/sashabeltinova/Downloads/opencv-2.4.10/build/CMakeFiles/CMakeTmp/testCXXCompiler.cxx
+Linking CXX executable cmTryCompileExec417954104
+/Applications/CMake.app/Contents/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec417954104.dir/link.txt --verbose=1
+/usr/bin/c++     -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names  CMakeFiles/cmTryCompileExec417954104.dir/testCXXCompiler.cxx.o  -o cmTryCompileExec417954104  
+
+
+Detecting CXX compiler ABI info compiled with the following output:
+Change Dir: /Users/sashabeltinova/Downloads/opencv-2.4.10/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec1729463835/fast"
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -f CMakeFiles/cmTryCompileExec1729463835.dir/build.make CMakeFiles/cmTryCompileExec1729463835.dir/build
+/Applications/CMake.app/Contents/bin/cmake -E cmake_progress_report /Users/sashabeltinova/Downloads/opencv-2.4.10/build/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building CXX object CMakeFiles/cmTryCompileExec1729463835.dir/CMakeCXXCompilerABI.cpp.o
+/usr/bin/c++    -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk   -o CMakeFiles/cmTryCompileExec1729463835.dir/CMakeCXXCompilerABI.cpp.o -c /Applications/CMake.app/Contents/share/cmake-3.1/Modules/CMakeCXXCompilerABI.cpp
+Linking CXX executable cmTryCompileExec1729463835
+/Applications/CMake.app/Contents/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec1729463835.dir/link.txt --verbose=1
+/usr/bin/c++     -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names -v -Wl,-v CMakeFiles/cmTryCompileExec1729463835.dir/CMakeCXXCompilerABI.cpp.o  -o cmTryCompileExec1729463835   
+Apple LLVM version 5.1 (clang-503.0.40) (based on LLVM 3.4svn)
+Target: x86_64-apple-darwin13.3.0
+Thread model: posix
+ "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld" -demangle -dynamic -arch x86_64 -macosx_version_min 10.9.0 -syslibroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -o cmTryCompileExec1729463835 -search_paths_first -headerpad_max_install_names -v CMakeFiles/cmTryCompileExec1729463835.dir/CMakeCXXCompilerABI.cpp.o -lc++ -lSystem /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/5.1/lib/darwin/libclang_rt.osx.a
+@(#)PROGRAM:ld  PROJECT:ld64-236.4
+configured to support archs: armv6 armv7 armv7s arm64 i386 x86_64 armv6m armv7m armv7em
+Library search paths:
+	/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/usr/lib
+Framework search paths:
+	/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/System/Library/Frameworks/
+
+
+Parsed CXX implicit link information from above output:
+  link line regex: [^( *|.*[/\])(ld|([^/\]+-)?ld|collect2)[^/\]*( |$)]
+  ignore line: [Change Dir: /Users/sashabeltinova/Downloads/opencv-2.4.10/build/CMakeFiles/CMakeTmp]
+  ignore line: []
+  ignore line: [Run Build Command:"/usr/bin/make" "cmTryCompileExec1729463835/fast"]
+  ignore line: [/Applications/Xcode.app/Contents/Developer/usr/bin/make -f CMakeFiles/cmTryCompileExec1729463835.dir/build.make CMakeFiles/cmTryCompileExec1729463835.dir/build]
+  ignore line: [/Applications/CMake.app/Contents/bin/cmake -E cmake_progress_report /Users/sashabeltinova/Downloads/opencv-2.4.10/build/CMakeFiles/CMakeTmp/CMakeFiles 1]
+  ignore line: [Building CXX object CMakeFiles/cmTryCompileExec1729463835.dir/CMakeCXXCompilerABI.cpp.o]
+  ignore line: [/usr/bin/c++    -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk   -o CMakeFiles/cmTryCompileExec1729463835.dir/CMakeCXXCompilerABI.cpp.o -c /Applications/CMake.app/Contents/share/cmake-3.1/Modules/CMakeCXXCompilerABI.cpp]
+  ignore line: [Linking CXX executable cmTryCompileExec1729463835]
+  ignore line: [/Applications/CMake.app/Contents/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec1729463835.dir/link.txt --verbose=1]
+  ignore line: [/usr/bin/c++     -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names -v -Wl,-v CMakeFiles/cmTryCompileExec1729463835.dir/CMakeCXXCompilerABI.cpp.o  -o cmTryCompileExec1729463835   ]
+  ignore line: [Apple LLVM version 5.1 (clang-503.0.40) (based on LLVM 3.4svn)]
+  ignore line: [Target: x86_64-apple-darwin13.3.0]
+  ignore line: [Thread model: posix]
+  link line: [ "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld" -demangle -dynamic -arch x86_64 -macosx_version_min 10.9.0 -syslibroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -o cmTryCompileExec1729463835 -search_paths_first -headerpad_max_install_names -v CMakeFiles/cmTryCompileExec1729463835.dir/CMakeCXXCompilerABI.cpp.o -lc++ -lSystem /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/5.1/lib/darwin/libclang_rt.osx.a]
+    arg [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld] ==> ignore
+    arg [-demangle] ==> ignore
+    arg [-dynamic] ==> ignore
+    arg [-arch] ==> ignore
+    arg [x86_64] ==> ignore
+    arg [-macosx_version_min] ==> ignore
+    arg [10.9.0] ==> ignore
+    arg [-syslibroot] ==> ignore
+    arg [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk] ==> ignore
+    arg [-o] ==> ignore
+    arg [cmTryCompileExec1729463835] ==> ignore
+    arg [-search_paths_first] ==> ignore
+    arg [-headerpad_max_install_names] ==> ignore
+    arg [-v] ==> ignore
+    arg [CMakeFiles/cmTryCompileExec1729463835.dir/CMakeCXXCompilerABI.cpp.o] ==> ignore
+    arg [-lc++] ==> lib [c++]
+    arg [-lSystem] ==> lib [System]
+    arg [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/5.1/lib/darwin/libclang_rt.osx.a] ==> lib [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/5.1/lib/darwin/libclang_rt.osx.a]
+  Library search paths: [;/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/usr/lib]
+  Framework search paths: [;/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/System/Library/Frameworks/]
+  remove lib [System]
+  collapse lib [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/5.1/lib/darwin/libclang_rt.osx.a] ==> [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/5.1/lib/darwin/libclang_rt.osx.a]
+  collapse library dir [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/usr/lib] ==> [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/usr/lib]
+  collapse framework dir [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/System/Library/Frameworks/] ==> [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/System/Library/Frameworks]
+  implicit libs: [c++;/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/5.1/lib/darwin/libclang_rt.osx.a]
+  implicit dirs: [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/usr/lib]
+  implicit fwks: [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/System/Library/Frameworks]
+
+
+Determining if the C compiler works passed with the following output:
+Change Dir: /Users/sashabeltinova/Downloads/opencv-2.4.10/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec2298356027/fast"
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -f CMakeFiles/cmTryCompileExec2298356027.dir/build.make CMakeFiles/cmTryCompileExec2298356027.dir/build
+/Applications/CMake.app/Contents/bin/cmake -E cmake_progress_report /Users/sashabeltinova/Downloads/opencv-2.4.10/build/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec2298356027.dir/testCCompiler.c.o
+/usr/bin/cc   -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk   -o CMakeFiles/cmTryCompileExec2298356027.dir/testCCompiler.c.o   -c /Users/sashabeltinova/Downloads/opencv-2.4.10/build/CMakeFiles/CMakeTmp/testCCompiler.c
+Linking C executable cmTryCompileExec2298356027
+/Applications/CMake.app/Contents/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec2298356027.dir/link.txt --verbose=1
+/usr/bin/cc    -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names  CMakeFiles/cmTryCompileExec2298356027.dir/testCCompiler.c.o  -o cmTryCompileExec2298356027  
+
+
+Detecting C compiler ABI info compiled with the following output:
+Change Dir: /Users/sashabeltinova/Downloads/opencv-2.4.10/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec506483314/fast"
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -f CMakeFiles/cmTryCompileExec506483314.dir/build.make CMakeFiles/cmTryCompileExec506483314.dir/build
+/Applications/CMake.app/Contents/bin/cmake -E cmake_progress_report /Users/sashabeltinova/Downloads/opencv-2.4.10/build/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec506483314.dir/CMakeCCompilerABI.c.o
+/usr/bin/cc   -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk   -o CMakeFiles/cmTryCompileExec506483314.dir/CMakeCCompilerABI.c.o   -c /Applications/CMake.app/Contents/share/cmake-3.1/Modules/CMakeCCompilerABI.c
+Linking C executable cmTryCompileExec506483314
+/Applications/CMake.app/Contents/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec506483314.dir/link.txt --verbose=1
+/usr/bin/cc    -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names -v -Wl,-v CMakeFiles/cmTryCompileExec506483314.dir/CMakeCCompilerABI.c.o  -o cmTryCompileExec506483314   
+Apple LLVM version 5.1 (clang-503.0.40) (based on LLVM 3.4svn)
+Target: x86_64-apple-darwin13.3.0
+Thread model: posix
+ "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld" -demangle -dynamic -arch x86_64 -macosx_version_min 10.9.0 -syslibroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -o cmTryCompileExec506483314 -search_paths_first -headerpad_max_install_names -v CMakeFiles/cmTryCompileExec506483314.dir/CMakeCCompilerABI.c.o -lSystem /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/5.1/lib/darwin/libclang_rt.osx.a
+@(#)PROGRAM:ld  PROJECT:ld64-236.4
+configured to support archs: armv6 armv7 armv7s arm64 i386 x86_64 armv6m armv7m armv7em
+Library search paths:
+	/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/usr/lib
+Framework search paths:
+	/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/System/Library/Frameworks/
+
+
+Parsed C implicit link information from above output:
+  link line regex: [^( *|.*[/\])(ld|([^/\]+-)?ld|collect2)[^/\]*( |$)]
+  ignore line: [Change Dir: /Users/sashabeltinova/Downloads/opencv-2.4.10/build/CMakeFiles/CMakeTmp]
+  ignore line: []
+  ignore line: [Run Build Command:"/usr/bin/make" "cmTryCompileExec506483314/fast"]
+  ignore line: [/Applications/Xcode.app/Contents/Developer/usr/bin/make -f CMakeFiles/cmTryCompileExec506483314.dir/build.make CMakeFiles/cmTryCompileExec506483314.dir/build]
+  ignore line: [/Applications/CMake.app/Contents/bin/cmake -E cmake_progress_report /Users/sashabeltinova/Downloads/opencv-2.4.10/build/CMakeFiles/CMakeTmp/CMakeFiles 1]
+  ignore line: [Building C object CMakeFiles/cmTryCompileExec506483314.dir/CMakeCCompilerABI.c.o]
+  ignore line: [/usr/bin/cc   -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk   -o CMakeFiles/cmTryCompileExec506483314.dir/CMakeCCompilerABI.c.o   -c /Applications/CMake.app/Contents/share/cmake-3.1/Modules/CMakeCCompilerABI.c]
+  ignore line: [Linking C executable cmTryCompileExec506483314]
+  ignore line: [/Applications/CMake.app/Contents/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec506483314.dir/link.txt --verbose=1]
+  ignore line: [/usr/bin/cc    -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names -v -Wl,-v CMakeFiles/cmTryCompileExec506483314.dir/CMakeCCompilerABI.c.o  -o cmTryCompileExec506483314   ]
+  ignore line: [Apple LLVM version 5.1 (clang-503.0.40) (based on LLVM 3.4svn)]
+  ignore line: [Target: x86_64-apple-darwin13.3.0]
+  ignore line: [Thread model: posix]
+  link line: [ "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld" -demangle -dynamic -arch x86_64 -macosx_version_min 10.9.0 -syslibroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -o cmTryCompileExec506483314 -search_paths_first -headerpad_max_install_names -v CMakeFiles/cmTryCompileExec506483314.dir/CMakeCCompilerABI.c.o -lSystem /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/5.1/lib/darwin/libclang_rt.osx.a]
+    arg [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld] ==> ignore
+    arg [-demangle] ==> ignore
+    arg [-dynamic] ==> ignore
+    arg [-arch] ==> ignore
+    arg [x86_64] ==> ignore
+    arg [-macosx_version_min] ==> ignore
+    arg [10.9.0] ==> ignore
+    arg [-syslibroot] ==> ignore
+    arg [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk] ==> ignore
+    arg [-o] ==> ignore
+    arg [cmTryCompileExec506483314] ==> ignore
+    arg [-search_paths_first] ==> ignore
+    arg [-headerpad_max_install_names] ==> ignore
+    arg [-v] ==> ignore
+    arg [CMakeFiles/cmTryCompileExec506483314.dir/CMakeCCompilerABI.c.o] ==> ignore
+    arg [-lSystem] ==> lib [System]
+    arg [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/5.1/lib/darwin/libclang_rt.osx.a] ==> lib [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/5.1/lib/darwin/libclang_rt.osx.a]
+  Library search paths: [;/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/usr/lib]
+  Framework search paths: [;/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/System/Library/Frameworks/]
+  remove lib [System]
+  collapse lib [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/5.1/lib/darwin/libclang_rt.osx.a] ==> [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/5.1/lib/darwin/libclang_rt.osx.a]
+  collapse library dir [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/usr/lib] ==> [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/usr/lib]
+  collapse framework dir [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/System/Library/Frameworks/] ==> [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/System/Library/Frameworks]
+  implicit libs: [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/5.1/lib/darwin/libclang_rt.osx.a]
+  implicit dirs: [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/usr/lib]
+  implicit fwks: [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/System/Library/Frameworks]
+
+
+Determining if the include file sys/types.h exists passed with the following output:
+Change Dir: /Users/sashabeltinova/Downloads/opencv-2.4.10/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec951506343/fast"
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -f CMakeFiles/cmTryCompileExec951506343.dir/build.make CMakeFiles/cmTryCompileExec951506343.dir/build
+/Applications/CMake.app/Contents/bin/cmake -E cmake_progress_report /Users/sashabeltinova/Downloads/opencv-2.4.10/build/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec951506343.dir/CheckIncludeFile.c.o
+/usr/bin/cc   -fPIC   -fsigned-char -W -Werror=return-type -Werror=address -Werror=sequence-point -Wformat -Werror=format-security -Wmissing-declarations -Wmissing-prototypes -Wstrict-prototypes -Wundef -Winit-self -Wpointer-arith -Wshadow -Wsign-promo -Wno-narrowing -Wno-delete-non-virtual-dtor -Wno-unnamed-type-template-args -fdiagnostics-show-option -Wno-long-long -fno-omit-frame-pointer -msse -msse2 -msse3  -O3 -DNDEBUG -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk   -o CMakeFiles/cmTryCompileExec951506343.dir/CheckIncludeFile.c.o   -c /Users/sashabeltinova/Downloads/opencv-2.4.10/build/CMakeFiles/CMakeTmp/CheckIncludeFile.c
+Linking C executable cmTryCompileExec951506343
+/Applications/CMake.app/Contents/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec951506343.dir/link.txt --verbose=1
+/usr/bin/cc   -fPIC   -fsigned-char -W -Werror=return-type -Werror=address -Werror=sequence-point -Wformat -Werror=format-security -Wmissing-declarations -Wmissing-prototypes -Wstrict-prototypes -Wundef -Winit-self -Wpointer-arith -Wshadow -Wsign-promo -Wno-narrowing -Wno-delete-non-virtual-dtor -Wno-unnamed-type-template-args -fdiagnostics-show-option -Wno-long-long -fno-omit-frame-pointer -msse -msse2 -msse3  -O3 -DNDEBUG -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names  CMakeFiles/cmTryCompileExec951506343.dir/CheckIncludeFile.c.o  -o cmTryCompileExec951506343  
+
+
+Determining if the include file stdint.h exists passed with the following output:
+Change Dir: /Users/sashabeltinova/Downloads/opencv-2.4.10/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec121262920/fast"
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -f CMakeFiles/cmTryCompileExec121262920.dir/build.make CMakeFiles/cmTryCompileExec121262920.dir/build
+/Applications/CMake.app/Contents/bin/cmake -E cmake_progress_report /Users/sashabeltinova/Downloads/opencv-2.4.10/build/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec121262920.dir/CheckIncludeFile.c.o
+/usr/bin/cc   -fPIC   -fsigned-char -W -Werror=return-type -Werror=address -Werror=sequence-point -Wformat -Werror=format-security -Wmissing-declarations -Wmissing-prototypes -Wstrict-prototypes -Wundef -Winit-self -Wpointer-arith -Wshadow -Wsign-promo -Wno-narrowing -Wno-delete-non-virtual-dtor -Wno-unnamed-type-template-args -fdiagnostics-show-option -Wno-long-long -fno-omit-frame-pointer -msse -msse2 -msse3  -O3 -DNDEBUG -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk   -o CMakeFiles/cmTryCompileExec121262920.dir/CheckIncludeFile.c.o   -c /Users/sashabeltinova/Downloads/opencv-2.4.10/build/CMakeFiles/CMakeTmp/CheckIncludeFile.c
+Linking C executable cmTryCompileExec121262920
+/Applications/CMake.app/Contents/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec121262920.dir/link.txt --verbose=1
+/usr/bin/cc   -fPIC   -fsigned-char -W -Werror=return-type -Werror=address -Werror=sequence-point -Wformat -Werror=format-security -Wmissing-declarations -Wmissing-prototypes -Wstrict-prototypes -Wundef -Winit-self -Wpointer-arith -Wshadow -Wsign-promo -Wno-narrowing -Wno-delete-non-virtual-dtor -Wno-unnamed-type-template-args -fdiagnostics-show-option -Wno-long-long -fno-omit-frame-pointer -msse -msse2 -msse3  -O3 -DNDEBUG -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names  CMakeFiles/cmTryCompileExec121262920.dir/CheckIncludeFile.c.o  -o cmTryCompileExec121262920  
+
+
+Determining if the include file stddef.h exists passed with the following output:
+Change Dir: /Users/sashabeltinova/Downloads/opencv-2.4.10/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec2229028139/fast"
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -f CMakeFiles/cmTryCompileExec2229028139.dir/build.make CMakeFiles/cmTryCompileExec2229028139.dir/build
+/Applications/CMake.app/Contents/bin/cmake -E cmake_progress_report /Users/sashabeltinova/Downloads/opencv-2.4.10/build/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec2229028139.dir/CheckIncludeFile.c.o
+/usr/bin/cc   -fPIC   -fsigned-char -W -Werror=return-type -Werror=address -Werror=sequence-point -Wformat -Werror=format-security -Wmissing-declarations -Wmissing-prototypes -Wstrict-prototypes -Wundef -Winit-self -Wpointer-arith -Wshadow -Wsign-promo -Wno-narrowing -Wno-delete-non-virtual-dtor -Wno-unnamed-type-template-args -fdiagnostics-show-option -Wno-long-long -fno-omit-frame-pointer -msse -msse2 -msse3  -O3 -DNDEBUG -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk   -o CMakeFiles/cmTryCompileExec2229028139.dir/CheckIncludeFile.c.o   -c /Users/sashabeltinova/Downloads/opencv-2.4.10/build/CMakeFiles/CMakeTmp/CheckIncludeFile.c
+Linking C executable cmTryCompileExec2229028139
+/Applications/CMake.app/Contents/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec2229028139.dir/link.txt --verbose=1
+/usr/bin/cc   -fPIC   -fsigned-char -W -Werror=return-type -Werror=address -Werror=sequence-point -Wformat -Werror=format-security -Wmissing-declarations -Wmissing-prototypes -Wstrict-prototypes -Wundef -Winit-self -Wpointer-arith -Wshadow -Wsign-promo -Wno-narrowing -Wno-delete-non-virtual-dtor -Wno-unnamed-type-template-args -fdiagnostics-show-option -Wno-long-long -fno-omit-frame-pointer -msse -msse2 -msse3  -O3 -DNDEBUG -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names  CMakeFiles/cmTryCompileExec2229028139.dir/CheckIncludeFile.c.o  -o cmTryCompileExec2229028139  
+
+
+Determining size of unsigned short passed with the following output:
+Change Dir: /Users/sashabeltinova/Downloads/opencv-2.4.10/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec3754810593/fast"
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -f CMakeFiles/cmTryCompileExec3754810593.dir/build.make CMakeFiles/cmTryCompileExec3754810593.dir/build
+/Applications/CMake.app/Contents/bin/cmake -E cmake_progress_report /Users/sashabeltinova/Downloads/opencv-2.4.10/build/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec3754810593.dir/CMAKE_SIZEOF_UNSIGNED_SHORT.c.o
+/usr/bin/cc   -fPIC   -fsigned-char -W -Werror=return-type -Werror=address -Werror=sequence-point -Wformat -Werror=format-security -Wmissing-declarations -Wmissing-prototypes -Wstrict-prototypes -Wundef -Winit-self -Wpointer-arith -Wshadow -Wsign-promo -Wno-narrowing -Wno-delete-non-virtual-dtor -Wno-unnamed-type-template-args -fdiagnostics-show-option -Wno-long-long -fno-omit-frame-pointer -msse -msse2 -msse3  -O3 -DNDEBUG -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk   -o CMakeFiles/cmTryCompileExec3754810593.dir/CMAKE_SIZEOF_UNSIGNED_SHORT.c.o   -c /Users/sashabeltinova/Downloads/opencv-2.4.10/build/CMakeFiles/CheckTypeSize/CMAKE_SIZEOF_UNSIGNED_SHORT.c
+Linking C executable cmTryCompileExec3754810593
+/Applications/CMake.app/Contents/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec3754810593.dir/link.txt --verbose=1
+/usr/bin/cc   -fPIC   -fsigned-char -W -Werror=return-type -Werror=address -Werror=sequence-point -Wformat -Werror=format-security -Wmissing-declarations -Wmissing-prototypes -Wstrict-prototypes -Wundef -Winit-self -Wpointer-arith -Wshadow -Wsign-promo -Wno-narrowing -Wno-delete-non-virtual-dtor -Wno-unnamed-type-template-args -fdiagnostics-show-option -Wno-long-long -fno-omit-frame-pointer -msse -msse2 -msse3  -O3 -DNDEBUG -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names  CMakeFiles/cmTryCompileExec3754810593.dir/CMAKE_SIZEOF_UNSIGNED_SHORT.c.o  -o cmTryCompileExec3754810593  
+
+
+Determining if the function fseeko exists passed with the following output:
+Change Dir: /Users/sashabeltinova/Downloads/opencv-2.4.10/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec3545693356/fast"
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -f CMakeFiles/cmTryCompileExec3545693356.dir/build.make CMakeFiles/cmTryCompileExec3545693356.dir/build
+/Applications/CMake.app/Contents/bin/cmake -E cmake_progress_report /Users/sashabeltinova/Downloads/opencv-2.4.10/build/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec3545693356.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -fPIC   -fsigned-char -W -Werror=return-type -Werror=address -Werror=sequence-point -Wformat -Werror=format-security -Wmissing-declarations -Wmissing-prototypes -Wstrict-prototypes -Wundef -Winit-self -Wpointer-arith -Wshadow -Wsign-promo -Wno-narrowing -Wno-delete-non-virtual-dtor -Wno-unnamed-type-template-args -fdiagnostics-show-option -Wno-long-long -fno-omit-frame-pointer -msse -msse2 -msse3 -DCHECK_FUNCTION_EXISTS=fseeko -O3 -DNDEBUG -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk   -o CMakeFiles/cmTryCompileExec3545693356.dir/CheckFunctionExists.c.o   -c /Applications/CMake.app/Contents/share/cmake-3.1/Modules/CheckFunctionExists.c
+Linking C executable cmTryCompileExec3545693356
+/Applications/CMake.app/Contents/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec3545693356.dir/link.txt --verbose=1
+/usr/bin/cc   -fPIC   -fsigned-char -W -Werror=return-type -Werror=address -Werror=sequence-point -Wformat -Werror=format-security -Wmissing-declarations -Wmissing-prototypes -Wstrict-prototypes -Wundef -Winit-self -Wpointer-arith -Wshadow -Wsign-promo -Wno-narrowing -Wno-delete-non-virtual-dtor -Wno-unnamed-type-template-args -fdiagnostics-show-option -Wno-long-long -fno-omit-frame-pointer -msse -msse2 -msse3 -DCHECK_FUNCTION_EXISTS=fseeko -O3 -DNDEBUG -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names  CMakeFiles/cmTryCompileExec3545693356.dir/CheckFunctionExists.c.o  -o cmTryCompileExec3545693356  
+
+
+Determining if the include file unistd.h exists passed with the following output:
+Change Dir: /Users/sashabeltinova/Downloads/opencv-2.4.10/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec2814875559/fast"
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -f CMakeFiles/cmTryCompileExec2814875559.dir/build.make CMakeFiles/cmTryCompileExec2814875559.dir/build
+/Applications/CMake.app/Contents/bin/cmake -E cmake_progress_report /Users/sashabeltinova/Downloads/opencv-2.4.10/build/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec2814875559.dir/CheckIncludeFile.c.o
+/usr/bin/cc   -fPIC   -fsigned-char -W -Werror=return-type -Werror=address -Werror=sequence-point -Wformat -Werror=format-security -Wmissing-declarations -Wmissing-prototypes -Wstrict-prototypes -Wundef -Winit-self -Wpointer-arith -Wshadow -Wsign-promo -Wno-narrowing -Wno-delete-non-virtual-dtor -Wno-unnamed-type-template-args -fdiagnostics-show-option -Wno-long-long -fno-omit-frame-pointer -msse -msse2 -msse3  -O3 -DNDEBUG -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk   -o CMakeFiles/cmTryCompileExec2814875559.dir/CheckIncludeFile.c.o   -c /Users/sashabeltinova/Downloads/opencv-2.4.10/build/CMakeFiles/CMakeTmp/CheckIncludeFile.c
+Linking C executable cmTryCompileExec2814875559
+/Applications/CMake.app/Contents/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec2814875559.dir/link.txt --verbose=1
+/usr/bin/cc   -fPIC   -fsigned-char -W -Werror=return-type -Werror=address -Werror=sequence-point -Wformat -Werror=format-security -Wmissing-declarations -Wmissing-prototypes -Wstrict-prototypes -Wundef -Winit-self -Wpointer-arith -Wshadow -Wsign-promo -Wno-narrowing -Wno-delete-non-virtual-dtor -Wno-unnamed-type-template-args -fdiagnostics-show-option -Wno-long-long -fno-omit-frame-pointer -msse -msse2 -msse3  -O3 -DNDEBUG -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names  CMakeFiles/cmTryCompileExec2814875559.dir/CheckIncludeFile.c.o  -o cmTryCompileExec2814875559  
+
+
+Determining if the include file assert.h exists passed with the following output:
+Change Dir: /Users/sashabeltinova/Downloads/opencv-2.4.10/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec2886265355/fast"
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -f CMakeFiles/cmTryCompileExec2886265355.dir/build.make CMakeFiles/cmTryCompileExec2886265355.dir/build
+/Applications/CMake.app/Contents/bin/cmake -E cmake_progress_report /Users/sashabeltinova/Downloads/opencv-2.4.10/build/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec2886265355.dir/CheckIncludeFile.c.o
+/usr/bin/cc   -fPIC   -fsigned-char -W -Werror=return-type -Werror=address -Werror=sequence-point -Wformat -Werror=format-security -Wmissing-declarations -Wmissing-prototypes -Wstrict-prototypes -Wundef -Winit-self -Wpointer-arith -Wshadow -Wsign-promo -Wno-narrowing -Wno-delete-non-virtual-dtor -Wno-unnamed-type-template-args -fdiagnostics-show-option -Wno-long-long -fno-omit-frame-pointer -msse -msse2 -msse3  -O3 -DNDEBUG -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk   -o CMakeFiles/cmTryCompileExec2886265355.dir/CheckIncludeFile.c.o   -c /Users/sashabeltinova/Downloads/opencv-2.4.10/build/CMakeFiles/CMakeTmp/CheckIncludeFile.c
+Linking C executable cmTryCompileExec2886265355
+/Applications/CMake.app/Contents/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec2886265355.dir/link.txt --verbose=1
+/usr/bin/cc   -fPIC   -fsigned-char -W -Werror=return-type -Werror=address -Werror=sequence-point -Wformat -Werror=format-security -Wmissing-declarations -Wmissing-prototypes -Wstrict-prototypes -Wundef -Winit-self -Wpointer-arith -Wshadow -Wsign-promo -Wno-narrowing -Wno-delete-non-virtual-dtor -Wno-unnamed-type-template-args -fdiagnostics-show-option -Wno-long-long -fno-omit-frame-pointer -msse -msse2 -msse3  -O3 -DNDEBUG -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names  CMakeFiles/cmTryCompileExec2886265355.dir/CheckIncludeFile.c.o  -o cmTryCompileExec2886265355  
+
+
+Determining if the include file fcntl.h exists passed with the following output:
+Change Dir: /Users/sashabeltinova/Downloads/opencv-2.4.10/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec2738040209/fast"
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -f CMakeFiles/cmTryCompileExec2738040209.dir/build.make CMakeFiles/cmTryCompileExec2738040209.dir/build
+/Applications/CMake.app/Contents/bin/cmake -E cmake_progress_report /Users/sashabeltinova/Downloads/opencv-2.4.10/build/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec2738040209.dir/CheckIncludeFile.c.o
+/usr/bin/cc   -fPIC   -fsigned-char -W -Werror=return-type -Werror=address -Werror=sequence-point -Wformat -Werror=format-security -Wmissing-declarations -Wmissing-prototypes -Wstrict-prototypes -Wundef -Winit-self -Wpointer-arith -Wshadow -Wsign-promo -Wno-narrowing -Wno-delete-non-virtual-dtor -Wno-unnamed-type-template-args -fdiagnostics-show-option -Wno-long-long -fno-omit-frame-pointer -msse -msse2 -msse3  -O3 -DNDEBUG -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk   -o CMakeFiles/cmTryCompileExec2738040209.dir/CheckIncludeFile.c.o   -c /Users/sashabeltinova/Downloads/opencv-2.4.10/build/CMakeFiles/CMakeTmp/CheckIncludeFile.c
+Linking C executable cmTryCompileExec2738040209
+/Applications/CMake.app/Contents/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec2738040209.dir/link.txt --verbose=1
+/usr/bin/cc   -fPIC   -fsigned-char -W -Werror=return-type -Werror=address -Werror=sequence-point -Wformat -Werror=format-security -Wmissing-declarations -Wmissing-prototypes -Wstrict-prototypes -Wundef -Winit-self -Wpointer-arith -Wshadow -Wsign-promo -Wno-narrowing -Wno-delete-non-virtual-dtor -Wno-unnamed-type-template-args -fdiagnostics-show-option -Wno-long-long -fno-omit-frame-pointer -msse -msse2 -msse3  -O3 -DNDEBUG -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names  CMakeFiles/cmTryCompileExec2738040209.dir/CheckIncludeFile.c.o  -o cmTryCompileExec2738040209  
+
+
+Determining if the function mmap exists passed with the following output:
+Change Dir: /Users/sashabeltinova/Downloads/opencv-2.4.10/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec1385094375/fast"
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -f CMakeFiles/cmTryCompileExec1385094375.dir/build.make CMakeFiles/cmTryCompileExec1385094375.dir/build
+/Applications/CMake.app/Contents/bin/cmake -E cmake_progress_report /Users/sashabeltinova/Downloads/opencv-2.4.10/build/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec1385094375.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -fPIC   -fsigned-char -W -Werror=return-type -Werror=address -Werror=sequence-point -Wformat -Werror=format-security -Wmissing-declarations -Wmissing-prototypes -Wstrict-prototypes -Wundef -Winit-self -Wpointer-arith -Wshadow -Wsign-promo -Wno-narrowing -Wno-delete-non-virtual-dtor -Wno-unnamed-type-template-args -fdiagnostics-show-option -Wno-long-long -fno-omit-frame-pointer -msse -msse2 -msse3 -DCHECK_FUNCTION_EXISTS=mmap -O3 -DNDEBUG -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk   -o CMakeFiles/cmTryCompileExec1385094375.dir/CheckFunctionExists.c.o   -c /Applications/CMake.app/Contents/share/cmake-3.1/Modules/CheckFunctionExists.c
+Linking C executable cmTryCompileExec1385094375
+/Applications/CMake.app/Contents/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec1385094375.dir/link.txt --verbose=1
+/usr/bin/cc   -fPIC   -fsigned-char -W -Werror=return-type -Werror=address -Werror=sequence-point -Wformat -Werror=format-security -Wmissing-declarations -Wmissing-prototypes -Wstrict-prototypes -Wundef -Winit-self -Wpointer-arith -Wshadow -Wsign-promo -Wno-narrowing -Wno-delete-non-virtual-dtor -Wno-unnamed-type-template-args -fdiagnostics-show-option -Wno-long-long -fno-omit-frame-pointer -msse -msse2 -msse3 -DCHECK_FUNCTION_EXISTS=mmap -O3 -DNDEBUG -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names  CMakeFiles/cmTryCompileExec1385094375.dir/CheckFunctionExists.c.o  -o cmTryCompileExec1385094375  
+
+
+Determining if the include file search.h exists passed with the following output:
+Change Dir: /Users/sashabeltinova/Downloads/opencv-2.4.10/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec178034061/fast"
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -f CMakeFiles/cmTryCompileExec178034061.dir/build.make CMakeFiles/cmTryCompileExec178034061.dir/build
+/Applications/CMake.app/Contents/bin/cmake -E cmake_progress_report /Users/sashabeltinova/Downloads/opencv-2.4.10/build/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec178034061.dir/CheckIncludeFile.c.o
+/usr/bin/cc   -fPIC   -fsigned-char -W -Werror=return-type -Werror=address -Werror=sequence-point -Wformat -Werror=format-security -Wmissing-declarations -Wmissing-prototypes -Wstrict-prototypes -Wundef -Winit-self -Wpointer-arith -Wshadow -Wsign-promo -Wno-narrowing -Wno-delete-non-virtual-dtor -Wno-unnamed-type-template-args -fdiagnostics-show-option -Wno-long-long -fno-omit-frame-pointer -msse -msse2 -msse3  -O3 -DNDEBUG -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk   -o CMakeFiles/cmTryCompileExec178034061.dir/CheckIncludeFile.c.o   -c /Users/sashabeltinova/Downloads/opencv-2.4.10/build/CMakeFiles/CMakeTmp/CheckIncludeFile.c
+Linking C executable cmTryCompileExec178034061
+/Applications/CMake.app/Contents/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec178034061.dir/link.txt --verbose=1
+/usr/bin/cc   -fPIC   -fsigned-char -W -Werror=return-type -Werror=address -Werror=sequence-point -Wformat -Werror=format-security -Wmissing-declarations -Wmissing-prototypes -Wstrict-prototypes -Wundef -Winit-self -Wpointer-arith -Wshadow -Wsign-promo -Wno-narrowing -Wno-delete-non-virtual-dtor -Wno-unnamed-type-template-args -fdiagnostics-show-option -Wno-long-long -fno-omit-frame-pointer -msse -msse2 -msse3  -O3 -DNDEBUG -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names  CMakeFiles/cmTryCompileExec178034061.dir/CheckIncludeFile.c.o  -o cmTryCompileExec178034061  
+
+
+Determining if the include file string.h exists passed with the following output:
+Change Dir: /Users/sashabeltinova/Downloads/opencv-2.4.10/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec1928564860/fast"
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -f CMakeFiles/cmTryCompileExec1928564860.dir/build.make CMakeFiles/cmTryCompileExec1928564860.dir/build
+/Applications/CMake.app/Contents/bin/cmake -E cmake_progress_report /Users/sashabeltinova/Downloads/opencv-2.4.10/build/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec1928564860.dir/CheckIncludeFile.c.o
+/usr/bin/cc   -fPIC   -fsigned-char -W -Werror=return-type -Werror=address -Werror=sequence-point -Wformat -Werror=format-security -Wmissing-declarations -Wmissing-prototypes -Wstrict-prototypes -Wundef -Winit-self -Wpointer-arith -Wshadow -Wsign-promo -Wno-narrowing -Wno-delete-non-virtual-dtor -Wno-unnamed-type-template-args -fdiagnostics-show-option -Wno-long-long -fno-omit-frame-pointer -msse -msse2 -msse3  -O3 -DNDEBUG -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk   -o CMakeFiles/cmTryCompileExec1928564860.dir/CheckIncludeFile.c.o   -c /Users/sashabeltinova/Downloads/opencv-2.4.10/build/CMakeFiles/CMakeTmp/CheckIncludeFile.c
+Linking C executable cmTryCompileExec1928564860
+/Applications/CMake.app/Contents/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec1928564860.dir/link.txt --verbose=1
+/usr/bin/cc   -fPIC   -fsigned-char -W -Werror=return-type -Werror=address -Werror=sequence-point -Wformat -Werror=format-security -Wmissing-declarations -Wmissing-prototypes -Wstrict-prototypes -Wundef -Winit-self -Wpointer-arith -Wshadow -Wsign-promo -Wno-narrowing -Wno-delete-non-virtual-dtor -Wno-unnamed-type-template-args -fdiagnostics-show-option -Wno-long-long -fno-omit-frame-pointer -msse -msse2 -msse3  -O3 -DNDEBUG -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names  CMakeFiles/cmTryCompileExec1928564860.dir/CheckIncludeFile.c.o  -o cmTryCompileExec1928564860  
+
+
+Determining if the include file unistd.h exists passed with the following output:
+Change Dir: /Users/sashabeltinova/Downloads/opencv-2.4.10/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec1335743134/fast"
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -f CMakeFiles/cmTryCompileExec1335743134.dir/build.make CMakeFiles/cmTryCompileExec1335743134.dir/build
+/Applications/CMake.app/Contents/bin/cmake -E cmake_progress_report /Users/sashabeltinova/Downloads/opencv-2.4.10/build/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec1335743134.dir/CheckIncludeFile.c.o
+/usr/bin/cc   -fPIC   -fsigned-char -W -Werror=return-type -Werror=address -Werror=sequence-point -Wformat -Werror=format-security -Wmissing-declarations -Wmissing-prototypes -Wstrict-prototypes -Wundef -Winit-self -Wpointer-arith -Wshadow -Wsign-promo -Wno-narrowing -Wno-delete-non-virtual-dtor -Wno-unnamed-type-template-args -fdiagnostics-show-option -Wno-long-long -fno-omit-frame-pointer -msse -msse2 -msse3  -O3 -DNDEBUG -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk   -o CMakeFiles/cmTryCompileExec1335743134.dir/CheckIncludeFile.c.o   -c /Users/sashabeltinova/Downloads/opencv-2.4.10/build/CMakeFiles/CMakeTmp/CheckIncludeFile.c
+Linking C executable cmTryCompileExec1335743134
+/Applications/CMake.app/Contents/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec1335743134.dir/link.txt --verbose=1
+/usr/bin/cc   -fPIC   -fsigned-char -W -Werror=return-type -Werror=address -Werror=sequence-point -Wformat -Werror=format-security -Wmissing-declarations -Wmissing-prototypes -Wstrict-prototypes -Wundef -Winit-self -Wpointer-arith -Wshadow -Wsign-promo -Wno-narrowing -Wno-delete-non-virtual-dtor -Wno-unnamed-type-template-args -fdiagnostics-show-option -Wno-long-long -fno-omit-frame-pointer -msse -msse2 -msse3  -O3 -DNDEBUG -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names  CMakeFiles/cmTryCompileExec1335743134.dir/CheckIncludeFile.c.o  -o cmTryCompileExec1335743134  
+
+
+Determining if the include file semaphore.h exists passed with the following output:
+Change Dir: /Users/sashabeltinova/Downloads/opencv-2.4.10/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec997007877/fast"
+/Applications/Xcode.app/Contents/Developer/usr/bin/make -f CMakeFiles/cmTryCompileExec997007877.dir/build.make CMakeFiles/cmTryCompileExec997007877.dir/build
+/Applications/CMake.app/Contents/bin/cmake -E cmake_progress_report /Users/sashabeltinova/Downloads/opencv-2.4.10/build/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec997007877.dir/CheckIncludeFile.c.o
+/usr/bin/cc   -fPIC   -fsigned-char -W -Werror=return-type -Werror=address -Werror=sequence-point -Wformat -Werror=format-security -Wmissing-declarations -Wmissing-prototypes -Wstrict-prototypes -Wundef -Winit-self -Wpointer-arith -Wshadow -Wsign-promo -Wno-narrowing -Wno-delete-non-virtual-dtor -Wno-unnamed-type-template-args -fdiagnostics-show-option -Wno-long-long -fno-omit-frame-pointer -msse -msse2 -msse3  -O3 -DNDEBUG -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk   -o CMakeFiles/cmTryCompileExec997007877.dir/CheckIncludeFile.c.o   -c /Users/sashabeltinova/Downloads/opencv-2.4.10/build/CMakeFiles/CMakeTmp/CheckIncludeFile.c
+Linking C executable cmTryCompileExec997007877
+/Applications/CMake.app/Contents/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec997007877.dir/link.txt --verbose=1
+/usr/bin/cc   -fPIC   -fsigned-char -W -Werror=return-type -Werror=address -Werror=sequence-point -Wformat -Werror=format-security -Wmissing-declarations -Wmissing-prototypes -Wstrict-prototypes -Wundef -Winit-self -Wpointer-arith -Wshadow -Wsign-promo -Wno-narrowing -Wno-delete-non-virtual-dtor -Wno-unnamed-type-template-args -fdiagnostics-show-option -Wno-long-long -fno-omit-frame-pointer -msse -msse2 -msse3  -O3 -DNDEBUG -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names  CMakeFiles/cmTryCompileExec997007877.dir/CheckIncludeFile.c.o  -o cmTryCompileExec997007877  
+
+
