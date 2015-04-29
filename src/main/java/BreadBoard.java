@@ -13,13 +13,16 @@ import java.awt.image.SampleModel;
  */
 public class BreadBoard {
 
+    public static final double SAMPLE_AREA_WIDTH = 0.15;
     //constants
     final int NUM_OF_ROWS = 63;
     final int NUM_OF_ROWS_SIDES = 50;
     final int NUM_OF_COLS = 14;
 
     //fields
-    private Color[][] rawMatrix; //raw matrix
+    private Color[][] rawMatrix; //raw matrix // Color[row][[col]
+    int rawWidth;
+    int rawHeight;
     private Hole[][] holeMatrix; //hole matrix
     Rectangle2D boundingBox;
 
@@ -31,6 +34,8 @@ public class BreadBoard {
     public BreadBoard(BufferedImage bImage) {
 
         rawMatrix = imageToMatrix(bImage);
+        rawWidth = rawMatrix[0].length;
+        rawHeight = rawMatrix.length;
         holeMatrix = initHoleMatrix();
         boundingBox = getBoundingBox();
 
@@ -104,6 +109,72 @@ public class BreadBoard {
     }
 
     public Rectangle2D getBoundingBox() {
+        int width = rawMatrix[0].length;
+        int height = rawMatrix.length;
+
+
+        //calculate rgb averages in a center sample area
+        int sampleWidth = (int)(width * SAMPLE_AREA_WIDTH);
+        int sampleheight = sampleWidth;
+        Rectangle2D sampleArea = new Rectangle2D.Double(((width/2)-sampleWidth/2),((height/2)-sampleheight/2),sampleWidth,sampleheight); // a box in the center of the image
+        Color average = getAverageInArea(sampleArea);
+
+        // look for binding box where "white" is the average calculated +/-
+
+        int topX=-1, bottomX=Integer.MAX_VALUE, bottomY=-1, topY=-1;
+
+        for (int y = 0; y < rawHeight; y++) {
+            for (int x = 0; x < rawWidth; x++) {
+                if (Utils.equalsInRange(rawMatrix[y][x],average)) {
+
+                    if (bottomY == -1)
+                        bottomY = y;
+                    topY = y; //always set the bottom value, last time will have the right one
+
+                    if (x > topX)
+                        topX = x;
+                    if (x < bottomX)
+                        bottomX = x;
+                }
+            }
+        }
+
+        Rectangle2D.Double box = new Rectangle.Double(bottomY,bottomX,topY-bottomY,topX-bottomX);
+
+        return box;
+
+
+
+
         return boundingBox;
     }
+
+    /**
+     * Calculates an RGB average in a area
+     * @param sampleArea the area to look in
+     * @return Color average
+     */
+    private Color getAverageInArea(Rectangle2D sampleArea) {
+
+        int r = 0;
+        int g = 0;
+        int b = 0;
+
+        for (int y = (int) sampleArea.getMinY(); y < sampleArea.getMaxY(); y++) {
+            for (int x = (int) sampleArea.getMinX(); x < sampleArea.getMaxX(); x++) {
+                r += rawMatrix[y][x].getRed();
+                g += rawMatrix[y][x].getGreen();
+                b += rawMatrix[y][x].getBlue();
+            }
+        }
+
+        int numOfPixels = rawHeight*rawWidth;
+        r /=numOfPixels;
+        g /=numOfPixels;
+        b /=numOfPixels;
+
+        return new Color(r,g,b);
+    }
+
+
 }
