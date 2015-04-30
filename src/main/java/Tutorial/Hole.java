@@ -14,7 +14,7 @@ public class Hole {
     private boolean state;
     private Rectangle2D rect;
     private Color[][] rangedRawMatrix;
-    double blackAverage;
+    double numOfBlackPixels;
 
     public Hole(int rowNum, int colNum) {
         this.row = String.valueOf(rowNum);
@@ -23,13 +23,35 @@ public class Hole {
     }
 
 
-    public Hole(int rowNum, int colNum,Rectangle2D rect) {
+    //todo: since constructor is never called, find where to initialize values
+    public Hole(int rowNum, int colNum,Rectangle2D rect, Color[][] matrix) {
         this(rowNum,colNum);
         this.rect = rect;
-        this.blackAverage = calculateBlackAverage();
+        setRawDataFromFullMatrix(matrix);
+        this.numOfBlackPixels = calculateNumberOfBlackPixels();
     }
 
-    private double calculateBlackAverage() {
+    /**
+     * copies the pixel data from the original raw data matrix to this hole ranged raw matrix
+     * @param matrix
+     */
+    private void setRawDataFromFullMatrix(Color[][] matrix) {
+        int r = 0;
+        int c = 0;
+        for (int y = (int) rect.getMinY(); y < rect.getMaxY(); y++) {
+            for (int x = (int) rect.getMinX(); x < rect.getMaxX(); x++) {
+                rangedRawMatrix[r++][c++] = matrix[y][x];
+            }
+        }
+    }
+
+
+    /**
+     * Calculates the number of black pixels in hole
+     * @return
+     */
+    private double calculateNumberOfBlackPixels() {
+        //todo: implement by iterating on rangedRawMatrix
         return 0;
     }
 

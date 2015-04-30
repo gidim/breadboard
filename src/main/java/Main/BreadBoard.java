@@ -1,10 +1,13 @@
+package Main;
 
 import Tutorial.Hole;
+import org.opencv.core.Mat;
 
 import javax.media.jai.*;
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferByte;
 import java.awt.image.Raster;
 import java.awt.image.SampleModel;
 
@@ -12,6 +15,10 @@ import java.awt.image.SampleModel;
  * Created by edolev89 on 4/28/15.
  */
 public class BreadBoard {
+
+    /** Singleton */
+    private static BreadBoard singleton = null;
+
 
     public static final double SAMPLE_AREA_WIDTH = 0.15;
     public static final int FOREGROUND_BG_SENSITIVITY = 10;
@@ -30,7 +37,9 @@ public class BreadBoard {
     int rawWidth;
     int rawHeight;
     private Hole[][] holeMatrix; //hole matrix
+    private Mat imageAsMat;
     Rectangle2D boundingBox;
+
 
     /**
      * Constructor
@@ -43,12 +52,24 @@ public class BreadBoard {
         rawHeight = rawMatrix.length;
         boundingBox = getBoundingBox();
         holeMatrix = getHoleMatrix();
+        setMat(bImage);
+        this.singleton = this;
 
     }
 
     /**
      * Initiates the hole matrix
      * @return initiated hole matrix
+     * Semi Singelton to allow parts to get BreadBoard Data
+     * @return
+     */
+    public synchronized static BreadBoard getInstance() {
+        return singleton;
+    }
+
+
+    /**
+     * @return
      */
     private Hole[][] initHoleMatrix() {
         Hole[][] mat = new Hole[NUM_OF_ROWS][NUM_OF_COLS];
@@ -250,4 +271,13 @@ public class BreadBoard {
     }
 
 
+    public void setMat(BufferedImage bi) {
+        byte[] pixels = ((DataBufferByte) bi.getRaster().getDataBuffer()).getData();
+        this.imageAsMat.put(0, 0, pixels);
+
+    }
+
+    public Mat getMatImage() {
+        return imageAsMat;
+    }
 }
