@@ -13,13 +13,12 @@ import java.awt.image.SampleModel;
  */
 public class BreadBoard {
 
-    //TL: 130, 21 | BR: 290, 507
-
-
     public static final double SAMPLE_AREA_WIDTH = 0.15;
     public static final int FOREGROUND_BG_SENSITIVITY = 10;
-    public static final int FIRST_RED_LINE_SENSITIVITY = 70;
+    public static final int HOLE_COLOR_SENSITIVITY = 70;
+    public static final int FIRST_RED_LINE_SENSITIVITY = 90;
     public static final int TRAVERSE_RED_LINE_NUM_OF_PIXELS = 2; //how many pixels to check on each side of red line
+    public static final double RED_LINE_TOP_TO_FIRST_HOLE_PERCENTAGE = 0.0078; //height diff between top of red line to first hole in percentage of bounding box height
 
     //constants
     final int NUM_OF_ROWS = 63;
@@ -34,8 +33,7 @@ public class BreadBoard {
     Rectangle2D boundingBox;
 
     /**
-     * Constructor.
-     *
+     * Constructor
      * @param bImage buffered image
      */
     public BreadBoard(BufferedImage bImage) {
@@ -70,37 +68,78 @@ public class BreadBoard {
         return mat;
     }
 
+    /**
+     * Builds the full hole matrix
+     * @return
+     */
+    //todo wrap up hole matrix generation. Right now only finds A1 location
     private Hole[][] getHoleMatrix() {
         Hole[][] mat = initHoleMatrix();
 
-        int x = findFirstHoleX();
+        int[] firstHoleCoords = findFirstHole();
 
-        System.out.println(rawMatrix[(int) (boundingBox.getMinY() + boundingBox.getHeight() / 2)][x].getRed() + " " + rawMatrix[(int) (boundingBox.getMinY() + boundingBox.getHeight() / 2)][x].getBlue());
+
+        //System.out.println(rawMatrix[(int) (boundingBox.getMinY() + boundingBox.getHeight() / 2)][x].getRed() + " " + rawMatrix[(int) (boundingBox.getMinY() + boundingBox.getHeight() / 2)][x].getBlue());
 
         return mat;
     }
 
-    private int findFirstHoleX() {
+    /**
+     * Finds x,y coordinates for first hole (A1)
+     * @return x,y coordinates for first hole (A1)
+     */
+    private int[] findFirstHole() {
         int y = (int) (boundingBox.getMinY() + boundingBox.getHeight() / 2);
         int x = (int) boundingBox.getMinX();
         //find middle of first red line
-        while (rawMatrix[y][x].getRed() - rawMatrix[y][x].getBlue() < FIRST_RED_LINE_SENSITIVITY) {
+        while (Utils.getDistinctColor(rawMatrix[y][x], FIRST_RED_LINE_SENSITIVITY) != Utils.RED) {
             x++;
         }
 
-        System.out.println(y);
         //find top of first red line
         while(hasRedInLine(x, y, TRAVERSE_RED_LINE_NUM_OF_PIXELS)) {
             y--;
         }
 
-        System.out.println(y + " " + boundingBox.getMinY());
+        int pixToFirst = (int) Math.ceil(RED_LINE_TOP_TO_FIRST_HOLE_PERCENTAGE * boundingBox.getHeight()) + 2;
 
-        return x;
+        while(!hasHoleInCol(x, y, pixToFirst)) {
+            x++;
+        }
+        x--;
+
+        int[] coords = {x, y};
+
+        return coords;
     }
 
+    /**
+     * Goes up through a numOfPixels-sized col starting from x,y and checks if there's a dark pixel there
+     * @param x
+     * @param y
+     * @param numOfPixels col height
+     * @return
+     */
+    private boolean hasHoleInCol(int x, int y, int numOfPixels) {
+        for(int i = y, j = 0; j < numOfPixels; j++, i--) {
+
+            Color c1 = rawMatrix[i][x];
+            if(Utils.isDark(c1, HOLE_COLOR_SENSITIVITY)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Goes to left and right of x,y in numOfPixels lines to check if there's a red pixel (including x,y)
+     * @param x
+     * @param y
+     * @param numOfPixels line width to each side of x,y
+     * @return
+     */
     private boolean hasRedInLine(int x, int y, int numOfPixels) {
-        for(int i = x - numOfPixels; i < x + numOfPixels; i++) {
+        for(int i = x - numOfPixels; i < x + numOfPixels + 1; i++) {
             Color c1 = rawMatrix[y][i];
             if(Utils.getDistinctColor(c1, FIRST_RED_LINE_SENSITIVITY) == Utils.RED) {
                 return true;

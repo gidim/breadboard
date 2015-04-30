@@ -5,9 +5,11 @@ import java.awt.*;
  */
 public class Utils {
 
+    //constants
     public static final int RED = 0;
     public static final int GREEN = 1;
     public static final int BLUE = 2;
+
 
     /**
      * Check if two numbers are equal within a certain threshold
@@ -52,9 +54,29 @@ public class Utils {
             return BLUE;
         }
 
+
         return -1;
     }
 
+    /**
+     * Check if color is dark (i.e. all components under sensitivity)
+     * @param c1
+     * @param sensitivity
+     * @return
+     */
+    public static boolean isDark(Color c1, int sensitivity) {
+        if((c1.getRed() < sensitivity) && (c1.getGreen() < sensitivity) && (c1.getBlue() < sensitivity)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Check if color is mostly red (i.e. that component is at least sensitivity more than the others)
+     * @param c1
+     * @param sensitivity
+     * @return
+     */
     private static boolean isMostlyRed(Color c1, int sensitivity) {
         if((c1.getRed() - c1.getGreen() > sensitivity) && (c1.getRed() - c1.getBlue() > sensitivity)) {
             return true;
@@ -62,6 +84,12 @@ public class Utils {
         return false;
     }
 
+    /**
+     * Check if color is mostly green (i.e. that component is at least sensitivity more than the others)
+     * @param c1
+     * @param sensitivity
+     * @return
+     */
     private static boolean isMostlyGreen(Color c1, int sensitivity) {
         if((c1.getGreen() - c1.getRed() > sensitivity) && (c1.getGreen() - c1.getBlue() > sensitivity)) {
             return true;
@@ -69,6 +97,12 @@ public class Utils {
         return false;
     }
 
+    /**
+     * Check if color is mostly blue (i.e. that component is at least sensitivity more than the others)
+     * @param c1
+     * @param sensitivity
+     * @return
+     */
     private static boolean isMostlyBlue(Color c1, int sensitivity) {
         if((c1.getBlue() - c1.getGreen() > sensitivity) && (c1.getBlue() - c1.getRed() > sensitivity)) {
             return true;
