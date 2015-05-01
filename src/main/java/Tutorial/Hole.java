@@ -1,5 +1,7 @@
 package Tutorial;
 
+import Main.Utils;
+
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
 
@@ -8,13 +10,14 @@ import java.awt.geom.Rectangle2D;
  */
 public class Hole {
 
+    public static final int HOLE_EMPTY_NOT_SENSITIVITY = 20;
     //fields
     private String row;
     private String col;
     private boolean state;
     private Rectangle2D rect;
     private Color[][] rangedRawMatrix;
-    Color blackPixelsAverage;
+    Color emptyPixelAvg; //this holds the average pixel value for the original state of empty
 
     public Hole(int rowNum, int colNum) {
         this.row = String.valueOf(rowNum);
@@ -28,7 +31,7 @@ public class Hole {
         this(rowNum,colNum);
         this.rect = rect;
         setRangedRawMatrixFromFullMatrix(matrix);
-        this.blackPixelsAverage = getAverageInArea();
+        this.emptyPixelAvg = getAverageInArea();
     }
 
     /**
@@ -70,6 +73,25 @@ public class Hole {
         b /=numOfPixels;
 
         return new Color(r,g,b);
+    }
+
+
+    /**
+     * This methods updates the hole data and should be called every time there's a change on the breadboard
+     * @param matrix full image matrix
+     * @return true if state of hole is true
+     */
+    public boolean refresh(Color[][] matrix){
+        setRangedRawMatrixFromFullMatrix(matrix);
+        Color currentPixelAvg = getAverageInArea();
+
+        if(!Utils.equalsInRange(currentPixelAvg, emptyPixelAvg, HOLE_EMPTY_NOT_SENSITIVITY)) {
+            state = true;
+        }
+        else {
+            state = false;
+        }
+        return false;
     }
 
 

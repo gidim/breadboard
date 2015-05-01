@@ -58,8 +58,6 @@ public class BreadBoard {
     }
 
     /**
-     * Initiates the hole matrix
-     * @return initiated hole matrix
      * Semi Singelton to allow parts to get BreadBoard Data
      * @return
      */
@@ -272,6 +270,7 @@ public class BreadBoard {
 
 
     public void setMat(BufferedImage bi) {
+        this.imageAsMat = new Mat(0,0,0);
         byte[] pixels = ((DataBufferByte) bi.getRaster().getDataBuffer()).getData();
         this.imageAsMat.put(0, 0, pixels);
 
