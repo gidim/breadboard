@@ -22,6 +22,8 @@ public class Hole {
     public Hole(int rowNum, int colNum) {
         this.row = String.valueOf(rowNum);
         this.col = Hole.colToString(colNum);
+        this.rect = null;
+
         state = false;
     }
 

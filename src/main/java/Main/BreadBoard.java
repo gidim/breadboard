@@ -3,6 +3,7 @@ package Main;
 import Tutorial.Hole;
 import org.opencv.core.Mat;
 
+import javax.imageio.ImageIO;
 import javax.media.jai.*;
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
@@ -10,6 +11,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.awt.image.Raster;
 import java.awt.image.SampleModel;
+import java.io.File;
 
 /**
  * Created by edolev89 on 4/28/15.
@@ -26,6 +28,12 @@ public class BreadBoard {
     public static final int FIRST_RED_LINE_SENSITIVITY = 90;
     public static final int TRAVERSE_RED_LINE_NUM_OF_PIXELS = 2; //how many pixels to check on each side of red line
     public static final double RED_LINE_TOP_TO_FIRST_HOLE_PERCENTAGE = 0.0078; //height diff between top of red line to first hole in percentage of bounding box height
+
+    public static final double HOLE_WIDTH = 0.78125;
+    public static final double HOLE_HEIGHT = 0.78125;
+    public static final double A1_TO_TOP = 1.8229166667;
+    public static final double A1_TO_LEFT = 7.2916666667;
+
 
     //constants
     final int NUM_OF_ROWS = 63;
@@ -55,7 +63,49 @@ public class BreadBoard {
         setMat(bImage);
         this.singleton = this;
 
+        bImage = transform(bImage);
+        File outputfile = new File("imagenew.jpg");
+        try {
+            ImageIO.write(bImage, "jpg", outputfile);
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+
     }
+
+    public BufferedImage transform(BufferedImage image) {
+
+        int w = image.getWidth();
+        int h = image.getHeight();
+
+        BufferedImage modified = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+
+        Graphics2D g2d = modified.createGraphics();
+        g2d.drawImage(image, null, 0, 0);
+        //g2.drawImage(IMAGE_FRAME, null, 0, 0);
+        g2d.setColor(Color.red);
+
+
+        g2d.setColor(Color.green);
+
+        for(int i = 0; i < holeMatrix.length; i++) {
+            for (int j = 0; j < holeMatrix[0].length; j++) {
+                Hole hole = holeMatrix[i][j];
+                if(hole != null) {
+                    if(hole.getRect() != null) {
+                        g2d.drawRect((int) hole.getRect().getMinX(), (int) hole.getRect().getMinY(), (int) hole.getRect().getWidth(), (int) hole.getRect().getHeight());
+                    }
+                }
+            }
+        }
+        g2d.finalize();
+        g2d.dispose();
+
+        modified.flush();
+
+        return modified;
+        }
 
     /**
      * Semi Singelton to allow parts to get BreadBoard Data
@@ -95,12 +145,20 @@ public class BreadBoard {
     private Hole[][] getHoleMatrix() {
         Hole[][] mat = initHoleMatrix();
 
-        int[] firstHoleCoords = findFirstHole();
-        int x = firstHoleCoords[0];
-        int y = firstHoleCoords[1];
-        System.out.println(x + " " + y);
-        System.out.println(rawMatrix[y][x]);
-        //System.out.println(rawMatrix[(int) (boundingBox.getMinY() + boundingBox.getHeight() / 2)][x].getRed() + " " + rawMatrix[(int) (boundingBox.getMinY() + boundingBox.getHeight() / 2)][x].getBlue());
+        int distanceFromTop = (int)((boundingBox.getHeight() * A1_TO_TOP) / 100);
+        int distanceFromLeft = (int)((boundingBox.getHeight()* A1_TO_LEFT) / 100);
+        int holeHeight = (int) ((boundingBox.getHeight() * HOLE_HEIGHT) / 100);
+        int holeWidth = (int) ((boundingBox.getHeight() * HOLE_WIDTH) / 100);
+
+        Hole ho = mat[0][2];
+        ho.setRect(new Rectangle2D.Double(boundingBox.getMinX() + distanceFromLeft, boundingBox.getMinY() + distanceFromTop, holeWidth, holeHeight));
+
+//        int[] firstHoleCoords = findFirstHole();
+//        int x = firstHoleCoords[0];
+//        int y = firstHoleCoords[1];
+//        System.out.println(x + " " + y);
+//        System.out.println(rawMatrix[y][x]);
+//        //System.out.println(rawMatrix[(int) (boundingBox.getMinY() + boundingBox.getHeight() / 2)][x].getRed() + " " + rawMatrix[(int) (boundingBox.getMinY() + boundingBox.getHeight() / 2)][x].getBlue());
 
         return mat;
     }
