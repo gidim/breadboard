@@ -1,7 +1,14 @@
 package Main;
 
 import Tutorial.Hole;
+import org.opencv.core.Core;
 import org.opencv.core.Mat;
+import org.opencv.core.MatOfDMatch;
+import org.opencv.core.MatOfKeyPoint;
+import org.opencv.features2d.DescriptorExtractor;
+import org.opencv.features2d.DescriptorMatcher;
+import org.opencv.features2d.Features2d;
+import org.opencv.highgui.Highgui;
 
 import javax.imageio.ImageIO;
 import javax.media.jai.*;
@@ -12,27 +19,29 @@ import java.awt.image.DataBufferByte;
 import java.awt.image.Raster;
 import java.awt.image.SampleModel;
 import java.io.File;
+import java.util.ArrayList;
 
 /**
  * Created by edolev89 on 4/28/15.
  */
 public class BreadBoard {
 
+    public static final double DISTANCE_BETWEEN_HOLES = 0.9527956139;
     /** Singleton */
     private static BreadBoard singleton = null;
 
 
     public static final double SAMPLE_AREA_WIDTH = 0.15;
-    public static final int FOREGROUND_BG_SENSITIVITY = 10;
+    public static final double FOREGROUND_BG_SENSITIVITY = 15;
     public static final int HOLE_COLOR_SENSITIVITY = 70;
     public static final int FIRST_RED_LINE_SENSITIVITY = 90;
     public static final int TRAVERSE_RED_LINE_NUM_OF_PIXELS = 2; //how many pixels to check on each side of red line
     public static final double RED_LINE_TOP_TO_FIRST_HOLE_PERCENTAGE = 0.0078; //height diff between top of red line to first hole in percentage of bounding box height
 
-    public static final double HOLE_WIDTH = 0.78125;
-    public static final double HOLE_HEIGHT = 0.78125;
-    public static final double A1_TO_TOP = 1.8229166667;
-    public static final double A1_TO_LEFT = 7.2916666667;
+    public static final double HOLE_WIDTH = 0.591798518;
+    public static final double HOLE_HEIGHT = 0.591798518;
+    public static final double A1_TO_TOP = 2.2475662286;
+    public static final double A1_TO_LEFT = 7.6088380882;
 
 
     //constants
@@ -150,8 +159,29 @@ public class BreadBoard {
         int holeHeight = (int) ((boundingBox.getHeight() * HOLE_HEIGHT) / 100);
         int holeWidth = (int) ((boundingBox.getHeight() * HOLE_WIDTH) / 100);
 
-        Hole ho = mat[0][2];
-        ho.setRect(new Rectangle2D.Double(boundingBox.getMinX() + distanceFromLeft, boundingBox.getMinY() + distanceFromTop, holeWidth, holeHeight));
+//        Hole holeA1 = mat[0][2];
+//        holeA1.setRect(new Rectangle2D.Double(boundingBox.getMinX() + distanceFromLeft, boundingBox.getMinY() + distanceFromTop, holeWidth, holeHeight));
+
+
+//        int leftOffset = (int) (holeA1.getRect().getMaxX() + holeA1.getRect().getWidth());
+//        int addition = (int) (holeA1.getRect().getWidth() * 2);
+//        int topOffset = (int)(holeA1.getRect().getMinY());
+        double leftOffset =  (boundingBox.getMinX() + distanceFromLeft);
+        double addition = ((DISTANCE_BETWEEN_HOLES * boundingBox.getHeight()) / 100 + holeWidth)  ;
+        double topOffset = (boundingBox.getMinY() + distanceFromTop);
+
+
+        for(int i = 0 ; i < mat.length ; i++){
+            for(int j  = 2 ; j < mat[0].length - 2 ; j++){
+                Hole h = mat[i][j];
+                h.setRect(new Rectangle.Double(leftOffset,topOffset,holeWidth,holeHeight));
+                leftOffset += addition;
+            }
+            topOffset +=addition;
+            leftOffset = (boundingBox.getMinX() + distanceFromLeft);
+        }
+
+
 
 //        int[] firstHoleCoords = findFirstHole();
 //        int x = firstHoleCoords[0];
@@ -338,5 +368,37 @@ public class BreadBoard {
 
     public Mat getMatImage() {
         return imageAsMat;
+    }
+
+    public void trySiftMagic(){
+
+        Mat m= Highgui.imread("hole.jpg", Highgui.CV_LOAD_IMAGE_COLOR);
+
+        new LoadImage("hole.jpg",m);
+
+        Mat big= Highgui.imread("big.jpg", Highgui.CV_LOAD_IMAGE_COLOR);
+        new LoadImage("big.jpg",big);
+
+
+
+        DescriptorExtractor ds = DescriptorExtractor.create(DescriptorExtractor.OPPONENT_SIFT);
+        Mat des1 = new Mat();
+        MatOfKeyPoint kp1 = new MatOfKeyPoint();
+        ds.compute(m,kp1,des1);
+        Mat des2 = new Mat();
+        MatOfKeyPoint kp2 = new MatOfKeyPoint();
+        ds.compute(big,kp2,des2);
+        DescriptorMatcher matcher = DescriptorMatcher.create(DescriptorMatcher.BRUTEFORCE);
+        ArrayList<MatOfDMatch> matches = new ArrayList<MatOfDMatch>();
+        matcher.knnMatch(des1,des2,matches,10);
+        System.out.println(matches.size());
+        Features2d f2d = new Features2d();
+        Mat res = new Mat();
+
+        for(MatOfDMatch modmach : matches){
+            f2d.drawMatches(des1,kp1,des2,kp2,modmach,res);
+        }
+        new LoadImage("test.jpg",big);
+
     }
 }

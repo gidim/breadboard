@@ -28,10 +28,38 @@ public class Utils {
         return false;
     }
 
+
+    /**
+     * Check if two numbers are equal within a certain threshold
+     * @param a
+     * @param b
+     * @param sensetivity threshold to allow
+     * @return true if equals
+     */
+    private static boolean isEqualInRange(double a, double b, double sensetivity){
+
+        if ((a >= (b - sensetivity)) && (a <= (b+sensetivity)) || (b >= (a - sensetivity)) && (b <= (a+sensetivity)) )
+            return true;
+
+        return false;
+    }
+
     public static boolean equalsInRange(Color c1, Color c2, int sensitivity) {
 
         if(isEqualInRange(c1.getRed(),c2.getRed(),sensitivity) &&
            isEqualInRange(c1.getGreen(),c2.getGreen(),sensitivity)&&
+                isEqualInRange(c1.getBlue(),c2.getBlue(),sensitivity)
+                )
+            return true;
+
+
+        return false;
+    }
+
+    public static boolean equalsInRange(Color c1, Color c2, double sensitivity) {
+
+        if(isEqualInRange(c1.getRed(),c2.getRed(),sensitivity) &&
+                isEqualInRange(c1.getGreen(),c2.getGreen(),sensitivity)&&
                 isEqualInRange(c1.getBlue(),c2.getBlue(),sensitivity)
                 )
             return true;

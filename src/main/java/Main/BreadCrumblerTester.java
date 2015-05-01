@@ -24,9 +24,10 @@ public class BreadCrumblerTester {
 
         BufferedImage img = null;
         try {
-            img = ImageIO.read(new File("image2.JPG"));
+            img = ImageIO.read(new File("big.JPG"));
 
             BreadBoard bb = new BreadBoard(img);
+            bb.trySiftMagic();
 
         } catch (IOException e) {
             e.printStackTrace();
