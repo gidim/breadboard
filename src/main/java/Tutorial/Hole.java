@@ -36,6 +36,7 @@ public class Hole {
         this.emptyPixelAvg = getAverageInArea();
     }
 
+
     /**
      * copies the pixel data from the original raw data matrix to this hole ranged raw matrix
      * @param matrix
@@ -154,4 +155,6 @@ public class Hole {
     public void setRect(Rectangle2D rect) {
         this.rect = rect;
     }
+
+
 }
