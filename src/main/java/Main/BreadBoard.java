@@ -84,8 +84,8 @@ public class BreadBoard {
         Graphics2D g2d = modified.createGraphics();
         g2d.drawImage(image, null, 0, 0);
         //g2.drawImage(IMAGE_FRAME, null, 0, 0);
-        g2d.setColor(Color.red);
-
+        g2d.setColor(Color.yellow);
+        g2d.drawRect((int) boundingBox.getMinX(), (int) boundingBox.getMinY(), (int) boundingBox.getWidth(), (int) boundingBox.getHeight());
 
         g2d.setColor(Color.green);
 

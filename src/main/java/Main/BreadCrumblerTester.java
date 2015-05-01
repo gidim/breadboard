@@ -24,7 +24,7 @@ public class BreadCrumblerTester {
 
         BufferedImage img = null;
         try {
-            img = ImageIO.read(new File("image.JPG"));
+            img = ImageIO.read(new File("image2.JPG"));
 
             BreadBoard bb = new BreadBoard(img);
 
