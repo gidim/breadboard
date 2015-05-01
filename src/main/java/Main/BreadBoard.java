@@ -96,8 +96,10 @@ public class BreadBoard {
         Hole[][] mat = initHoleMatrix();
 
         int[] firstHoleCoords = findFirstHole();
-
-
+        int x = firstHoleCoords[0];
+        int y = firstHoleCoords[1];
+        System.out.println(x + " " + y);
+        System.out.println(rawMatrix[y][x]);
         //System.out.println(rawMatrix[(int) (boundingBox.getMinY() + boundingBox.getHeight() / 2)][x].getRed() + " " + rawMatrix[(int) (boundingBox.getMinY() + boundingBox.getHeight() / 2)][x].getBlue());
 
         return mat;
@@ -125,7 +127,6 @@ public class BreadBoard {
         while(!hasHoleInCol(x, y, pixToFirst)) {
             x++;
         }
-        x--;
 
         int[] coords = {x, y};
 
@@ -273,6 +274,7 @@ public class BreadBoard {
         this.imageAsMat = new Mat(0,0,0);
         byte[] pixels = ((DataBufferByte) bi.getRaster().getDataBuffer()).getData();
         this.imageAsMat.put(0, 0, pixels);
+
 
     }
 

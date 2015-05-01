@@ -19,7 +19,11 @@ import org.opencv.imgproc.Imgproc;
 public class BreadCrumblerTester {
 
     public static void main(String[] args) {
+<<<<<<< HEAD
         System.load(new File("/usr/local/Cellar/opencv/2.4.10.1/share/OpenCV/java/libopencv_java2410.dylib").getAbsolutePath());
+=======
+        //System.loadLibrary("opencv_java248");
+>>>>>>> 860cd7b7b8793f241ebc662e457f35fe97e6aebf
         BufferedImage img = null;
         try {
             img = ImageIO.read(new File("image.JPG"));
