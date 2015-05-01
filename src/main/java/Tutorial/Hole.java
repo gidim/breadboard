@@ -14,7 +14,7 @@ public class Hole {
     private boolean state;
     private Rectangle2D rect;
     private Color[][] rangedRawMatrix;
-    double numOfBlackPixels;
+    Color blackPixelsAverage;
 
     public Hole(int rowNum, int colNum) {
         this.row = String.valueOf(rowNum);
@@ -27,15 +27,15 @@ public class Hole {
     public Hole(int rowNum, int colNum,Rectangle2D rect, Color[][] matrix) {
         this(rowNum,colNum);
         this.rect = rect;
-        setRawDataFromFullMatrix(matrix);
-        this.numOfBlackPixels = calculateNumberOfBlackPixels();
+        setRangedRawMatrixFromFullMatrix(matrix);
+        this.blackPixelsAverage = getAverageInArea();
     }
 
     /**
      * copies the pixel data from the original raw data matrix to this hole ranged raw matrix
      * @param matrix
      */
-    private void setRawDataFromFullMatrix(Color[][] matrix) {
+    private void setRangedRawMatrixFromFullMatrix(Color[][] matrix) {
         int r = 0;
         int c = 0;
         for (int y = (int) rect.getMinY(); y < rect.getMaxY(); y++) {
@@ -47,12 +47,29 @@ public class Hole {
 
 
     /**
-     * Calculates the number of black pixels in hole
+     * Calculates the average color in the bounding box
      * @return
      */
-    private double calculateNumberOfBlackPixels() {
-        //todo: implement by iterating on rangedRawMatrix
-        return 0;
+    private Color getAverageInArea() {
+
+        int r = 0;
+        int g = 0;
+        int b = 0;
+
+        for (int y = (int) rect.getMinY(); y < rect.getMaxY(); y++) {
+            for (int x = (int) rect.getMinX(); x < rect.getMaxX(); x++) {
+                r += rangedRawMatrix[y][x].getRed();
+                g += rangedRawMatrix[y][x].getGreen();
+                b += rangedRawMatrix[y][x].getBlue();
+            }
+        }
+
+        int numOfPixels = (int) (rect.getHeight()*rect.getWidth());
+        r /=numOfPixels;
+        g /=numOfPixels;
+        b /=numOfPixels;
+
+        return new Color(r,g,b);
     }
 
 
