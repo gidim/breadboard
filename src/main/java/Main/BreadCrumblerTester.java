@@ -29,6 +29,7 @@ public class BreadCrumblerTester {
 
             BreadBoard bb = new BreadBoard(img);
             bb.trySiftMagic();
+            bb.transform(img);
 
         } catch (IOException e) {
             e.printStackTrace();

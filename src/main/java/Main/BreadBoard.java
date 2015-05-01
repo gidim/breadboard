@@ -1,25 +1,22 @@
 package Main;
 
 import Tutorial.Hole;
-import org.opencv.core.Core;
-import org.opencv.core.Mat;
-import org.opencv.core.MatOfDMatch;
-import org.opencv.core.MatOfKeyPoint;
-import org.opencv.features2d.DescriptorExtractor;
-import org.opencv.features2d.DescriptorMatcher;
-import org.opencv.features2d.Features2d;
+import org.opencv.core.*;
+import org.opencv.features2d.*;
 import org.opencv.highgui.Highgui;
+import org.opencv.imgproc.Imgproc;
 
 import javax.imageio.ImageIO;
 import javax.media.jai.*;
 import java.awt.*;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.awt.image.Raster;
 import java.awt.image.SampleModel;
 import java.io.File;
-import java.util.ArrayList;
+import java.util.*;
 
 /**
  * Created by edolev89 on 4/28/15.
@@ -72,7 +69,7 @@ public class BreadBoard {
         setMat(bImage);
         this.singleton = this;
 
-        bImage = transform(bImage);
+        //bImage = transform(bImage);
         File outputfile = new File("imagenew.jpg");
         try {
             ImageIO.write(bImage, "jpg", outputfile);
@@ -96,22 +93,35 @@ public class BreadBoard {
         g2d.setColor(Color.yellow);
         g2d.drawRect((int) boundingBox.getMinX(), (int) boundingBox.getMinY(), (int) boundingBox.getWidth(), (int) boundingBox.getHeight());
 
-        g2d.setColor(Color.green);
+        g2d.setColor(Color.red);
 
-        for(int i = 0; i < holeMatrix.length; i++) {
-            for (int j = 0; j < holeMatrix[0].length; j++) {
-                Hole hole = holeMatrix[i][j];
-                if(hole != null) {
-                    if(hole.getRect() != null) {
-                        g2d.drawRect((int) hole.getRect().getMinX(), (int) hole.getRect().getMinY(), (int) hole.getRect().getWidth(), (int) hole.getRect().getHeight());
-                    }
-                }
-            }
+
+//        for(int i = 0; i < holeMatrix.length; i++) {
+//            for (int j = 0; j < holeMatrix[0].length; j++) {
+//                Hole hole = holeMatrix[i][j];
+//                if(hole != null) {
+//                    if(hole.getRect() != null) {
+//                        g2d.drawRect((int) hole.getRect().getMinX(), (int) hole.getRect().getMinY(), (int) hole.getRect().getWidth(), (int) hole.getRect().getHeight());
+//                    }
+//                }
+//            }
+//        }
+
+        for(int i = 0; i < p.length; i++) {
+            g2d.drawOval((int)p[i].getX(), (int)p[i].getY(), 5, 5);
         }
         g2d.finalize();
         g2d.dispose();
 
         modified.flush();
+
+        File outputfile = new File("imagenew.jpg");
+        try {
+            ImageIO.write(modified, "jpg", outputfile);
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
 
         return modified;
         }
@@ -370,35 +380,87 @@ public class BreadBoard {
         return imageAsMat;
     }
 
+    Point2D[] p = new Point2D[830];
     public void trySiftMagic(){
 
-        Mat m= Highgui.imread("hole.jpg", Highgui.CV_LOAD_IMAGE_COLOR);
+        Mat m= Highgui.imread("hole2.jpg", Highgui.CV_LOAD_IMAGE_COLOR);
 
-        new LoadImage("hole.jpg",m);
+        //new LoadImage("hole.jpg",m);
 
         Mat big= Highgui.imread("big.jpg", Highgui.CV_LOAD_IMAGE_COLOR);
-        new LoadImage("big.jpg",big);
+        //new LoadImage("big.jpg",big);
+
+        //Imgproc.cvtColor(m, m, Imgproc.COLOR_RGB2GRAY);
+        //Imgproc.cvtColor(big, big, Imgproc.COLOR_RGB2GRAY);
+
+        FeatureDetector ft = FeatureDetector.create(FeatureDetector.SIFT);
 
 
-
-        DescriptorExtractor ds = DescriptorExtractor.create(DescriptorExtractor.OPPONENT_SIFT);
+        DescriptorExtractor ds = DescriptorExtractor.create(DescriptorExtractor.SIFT);
         Mat des1 = new Mat();
         MatOfKeyPoint kp1 = new MatOfKeyPoint();
+
+        ft.detect(m, kp1);
         ds.compute(m,kp1,des1);
         Mat des2 = new Mat();
         MatOfKeyPoint kp2 = new MatOfKeyPoint();
+        ft.detect(big, kp2);
         ds.compute(big,kp2,des2);
         DescriptorMatcher matcher = DescriptorMatcher.create(DescriptorMatcher.BRUTEFORCE);
         ArrayList<MatOfDMatch> matches = new ArrayList<MatOfDMatch>();
-        matcher.knnMatch(des1,des2,matches,10);
+        int size = holeMatrix.length * holeMatrix[0].length - 13*4;
+        //if increase by *2, kind of a lot of false positives. Increase by 1.5 not so many false positives and a lot more holes get counted!
+
+        matcher.knnMatch(des1,des2,matches,size);
         System.out.println(matches.size());
         Features2d f2d = new Features2d();
         Mat res = new Mat();
 
-        for(MatOfDMatch modmach : matches){
-            f2d.drawMatches(des1,kp1,des2,kp2,modmach,res);
+        //I think last match is the best?
+        DMatch[] a = matches.get(matches.size() - 1).toArray();
+        KeyPoint[] k = kp2.toArray();
+        for(int i = 0; i < a.length;i++) {
+            DMatch d = a[i];
+            p[i] = new Point2D.Double(k[d.trainIdx].pt.x, k[d.trainIdx].pt.y);
+
         }
-        new LoadImage("test.jpg",big);
+
+        f2d.drawMatches(m,kp1,big,kp2,matches.get(1),res);
+
+
+//        for(int i = 0; i < matches.size(); i++){
+//            MatOfDMatch modmach = matches.get(i);
+//
+//            f2d.drawMatches(m,kp1,big,kp2,modmach,res);
+//
+//            DMatch[] a = modmach.toArray();
+//            KeyPoint[] k = kp2.toArray();
+//
+//            Arrays.sort(a, new Comparator<DMatch>() {
+//                @Override
+//                public int compare(DMatch o1, DMatch o2) {
+//                    if(o1.distance > o2.distance) {
+//                        return 1;
+//                    }
+//                    else if(o1.distance < o2.distance) {
+//                        return -1;
+//                    }
+//                    else {
+//                        return 0;
+//                    }
+//                }
+//            });
+//
+//            for(int i = 0; i < a.length;i++) {
+//                DMatch d = a[i];
+//                p[i] = new Point2D.Double(k[d.trainIdx].pt.x, k[d.trainIdx].pt.y);
+//
+//            }
+//        }
+
+
+
+        new LoadImage("test.jpg",res);
 
     }
 }
