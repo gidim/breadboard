@@ -68,6 +68,12 @@ public class Utils {
         return false;
     }
 
+    public static boolean isHueEqualsInRage(float[] c1, float[] c2, int colorSensitivty) {
+        if(isEqualInRange(c1[0],c2[0],colorSensitivty))
+            return true;
+        return false;
+    }
+
     /**
      * Returns int accordingly with most distinct color component. 0 - red. 1 - green. 2 - blue
      * @param c1
@@ -139,4 +145,6 @@ public class Utils {
         }
         return false;
     }
+
+
 }

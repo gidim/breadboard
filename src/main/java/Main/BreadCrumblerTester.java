@@ -4,6 +4,8 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+
+import Tutorial.LED;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
@@ -23,17 +25,12 @@ public class BreadCrumblerTester {
         System.load(new File("/usr/local/Cellar/opencv/2.4.10.1/share/OpenCV/java/libopencv_java2410.dylib").getAbsolutePath());
 
         BufferedImage img = null;
-        try {
 
-            img = ImageIO.read(new File("big.JPG"));
+        //File f = new File("big.JPG");
+        //img = ImageIO.read(f));
+        //BreadBoard bb = new BreadBoard(img, f);
+        //LED.searchInAreaSIFT(bb.getMatImage(),null);
 
-            BreadBoard bb = new BreadBoard(img);
-            bb.trySiftMagic();
-            bb.transform(img);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
 }

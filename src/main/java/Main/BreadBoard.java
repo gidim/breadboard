@@ -4,7 +4,6 @@ import Tutorial.Hole;
 import org.opencv.core.*;
 import org.opencv.features2d.*;
 import org.opencv.highgui.Highgui;
-import org.opencv.imgproc.Imgproc;
 
 import javax.imageio.ImageIO;
 import javax.media.jai.*;
@@ -15,7 +14,10 @@ import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.awt.image.Raster;
 import java.awt.image.SampleModel;
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 
 /**
@@ -29,7 +31,7 @@ public class BreadBoard {
 
 
     public static final double SAMPLE_AREA_WIDTH = 0.15;
-    public static final double FOREGROUND_BG_SENSITIVITY = 15;
+    public static final double FOREGROUND_BG_SENSITIVITY = 2;
     public static final int HOLE_COLOR_SENSITIVITY = 70;
     public static final int FIRST_RED_LINE_SENSITIVITY = 90;
     public static final int TRAVERSE_RED_LINE_NUM_OF_PIXELS = 2; //how many pixels to check on each side of red line
@@ -53,23 +55,28 @@ public class BreadBoard {
     private Hole[][] holeMatrix; //hole matrix
     private Mat imageAsMat;
     Rectangle2D boundingBox;
+    private BufferedImage bImage;
 
 
     /**
      * Constructor
-     * @param bImage buffered image
+     * @param f
      */
-    public BreadBoard(BufferedImage bImage) {
+    public BreadBoard(Mat frame, File f) {
 
+        bImage = matToBufferedImage(frame);
         rawMatrix = imageToMatrix(bImage);
         rawWidth = rawMatrix[0].length;
         rawHeight = rawMatrix.length;
         boundingBox = getBoundingBox();
-        holeMatrix = getHoleMatrix();
-        setMat(bImage);
+        //holeMatrix = getHoleMatrix();
+        //setMatFromBufferedImage(bImage);
+        //setMatFromFile(f.getPath());
+        this.imageAsMat = frame;
         this.singleton = this;
 
         //bImage = transform(bImage);
+        /*
         File outputfile = new File("imagenew.jpg");
         try {
             ImageIO.write(bImage, "jpg", outputfile);
@@ -77,7 +84,24 @@ public class BreadBoard {
         catch(Exception e) {
             e.printStackTrace();
         }
+    */
+    }
 
+    private BufferedImage matToBufferedImage(Mat frame) {
+        MatOfByte bytemat = new MatOfByte();
+
+        Highgui.imencode(".jpg", frame, bytemat);
+
+        byte[] bytes = bytemat.toArray();
+
+        InputStream in = new ByteArrayInputStream(bytes);
+        BufferedImage img = null;
+        try {
+           img = ImageIO.read(in);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return img;
     }
 
     public BufferedImage transform(BufferedImage image) {
@@ -94,18 +118,6 @@ public class BreadBoard {
         g2d.drawRect((int) boundingBox.getMinX(), (int) boundingBox.getMinY(), (int) boundingBox.getWidth(), (int) boundingBox.getHeight());
 
         g2d.setColor(Color.red);
-
-
-//        for(int i = 0; i < holeMatrix.length; i++) {
-//            for (int j = 0; j < holeMatrix[0].length; j++) {
-//                Hole hole = holeMatrix[i][j];
-//                if(hole != null) {
-//                    if(hole.getRect() != null) {
-//                        g2d.drawRect((int) hole.getRect().getMinX(), (int) hole.getRect().getMinY(), (int) hole.getRect().getWidth(), (int) hole.getRect().getHeight());
-//                    }
-//                }
-//            }
-//        }
 
         for(int i = 0; i < p.length; i++) {
             g2d.drawOval((int)p[i].getX(), (int)p[i].getY(), 5, 5);
@@ -368,19 +380,22 @@ public class BreadBoard {
     }
 
 
-    public void setMat(BufferedImage bi) {
-        this.imageAsMat = new Mat(0,0,0);
+    public void setMatFromBufferedImage(BufferedImage bi) {
+        this.imageAsMat = new Mat(0,0,16);
         byte[] pixels = ((DataBufferByte) bi.getRaster().getDataBuffer()).getData();
         this.imageAsMat.put(0, 0, pixels);
 
+    }
 
+    public void setMatFromFile(String filename) {
+        this.imageAsMat = Highgui.imread(filename, Highgui.CV_LOAD_IMAGE_COLOR);
     }
 
     public Mat getMatImage() {
         return imageAsMat;
     }
 
-    Point2D[] p = new Point2D[830];
+    Point2D[] p = new Point2D[830+830];
     public void trySiftMagic(){
 
         Mat m= Highgui.imread("hole2.jpg", Highgui.CV_LOAD_IMAGE_COLOR);
@@ -408,7 +423,7 @@ public class BreadBoard {
         ds.compute(big,kp2,des2);
         DescriptorMatcher matcher = DescriptorMatcher.create(DescriptorMatcher.BRUTEFORCE);
         ArrayList<MatOfDMatch> matches = new ArrayList<MatOfDMatch>();
-        int size = holeMatrix.length * holeMatrix[0].length - 13*4;
+        int size = (holeMatrix.length * holeMatrix[0].length - 13*4)+830;
         //if increase by *2, kind of a lot of false positives. Increase by 1.5 not so many false positives and a lot more holes get counted!
 
         matcher.knnMatch(des1,des2,matches,size);
@@ -462,5 +477,13 @@ public class BreadBoard {
 
         new LoadImage("test.jpg",res);
 
+    }
+
+    public Color[][] getRawMatrix() {
+        return rawMatrix;
+    }
+
+    public BufferedImage getBufferedImage() {
+        return this.bImage;
     }
 }
