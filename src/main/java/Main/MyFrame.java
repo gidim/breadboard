@@ -3,8 +3,13 @@ package Main;
 /**
  * Created by Gideon on 5/2/15.
  */
-import Tutorial.*;
 
+import Tutorial.*;
+import Tutorial.LED;
+import org.opencv.core.CvType;
+import org.opencv.core.Mat;
+import org.opencv.highgui.Highgui;
+import org.opencv.imgproc.Imgproc;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -12,7 +17,6 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -21,12 +25,15 @@ import javax.swing.border.EmptyBorder;
 public class MyFrame extends JFrame {
     private JPanel contentPane;
     private List<Point2D> pointsToDraw = new ArrayList<Point2D>();
-    private List<Rectangle> rectanglesToDraw = new ArrayList<Rectangle>();
+    private ArrayList<Rectangle2D> rectanglesToDraw = new ArrayList<Rectangle2D>();
+    private BreadBoard bb;
 
     /**
      * Launch the application.
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
+
+        new BreadBoard();
 
         //START VIDEO FRAME
         EventQueue.invokeLater(new Runnable() {
@@ -39,6 +46,9 @@ public class MyFrame extends JFrame {
                 }
             }
         });
+
+        while(!BreadBoard.getInstance().ready) //wait till breadboard finishes instantiation
+                Thread.sleep(1);
 
         //CONFIGURE TUTORIAL
         Circuit circuit = new Circuit();
@@ -76,19 +86,14 @@ public class MyFrame extends JFrame {
             //Prompt User
             System.out.printf(step.getInstruction());
             //Wait till user finishes
-            BreadBoard.getInstance().blockTillDone();
+            BreadBoard.getInstance().blockTillDone();//todo: check
             //verify that the part is in the right place
             while(!step.isValid()){
-
+                System.out.println("Try Again");
+                System.out.printf(step.getInstruction());
             }
             System.out.println("Step completed!");
-
         }
-
-
-
-
-
     }
 
     /**
@@ -101,18 +106,31 @@ public class MyFrame extends JFrame {
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         setContentPane(contentPane);
         contentPane.setLayout(null);
+        pointsToDraw = new ArrayList<Point2D>();
+
 
         this.getContentPane().addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 System.out.println("Click!" + e);
-                BreadBoard.getInstance().setA1Pixel(e.getX()-3,e.getY()+18);
-                BreadBoard.getInstance().updateHoleMatrix();
-                //pointsToDraw.add(new Point2D.Double(e.getX()-3,e.getY()+18));
 
+            bb.getHoleMatrix();
             }
         });
 
+//        this.getContentPane().addMouseListener(new MouseAdapter() {
+//            @Override
+//            public void mouseClicked(MouseEvent e) {
+//                System.out.println("Click!" + e);
+//                BreadBoard.getInstance().setA1Pixel(e.getX()-3,e.getY()+18);
+//                BreadBoard.getInstance().updateHoleMatrix();
+//                //pointsToDraw.add(new Point2D.Double(e.getX()-3,e.getY()+18));
+//
+//            }
+//        });
+
+
+        bb = new BreadBoard();
         new MyThread().start();
     }
 
@@ -122,36 +140,45 @@ public class MyFrame extends JFrame {
         BufferedImage image =videoCap.getOneFrame(); // get frame from camera
         Graphics2D g = image.createGraphics();
 
-        BreadBoard bb = new BreadBoard(videoCap.mat2Img.getMat(),null);
-        //find LED
-        g.setColor(Color.red);
-        List<Point2D> points = LED.searchInAreaHSB(BreadBoard.getInstance().getRawMatrix(), null);
-        if(points.size() != 0)
-            pointsToDraw = new ArrayList<Point2D>(points);
-        for(Point2D point : pointsToDraw)
-            g.drawRect((int) point.getX(), (int) point.getY(),4,4);
+        //draw very important parallel line
+        drawParallelLine(g,image);
+
+        //update breadboard with the new data
+        bb.refresh(videoCap.mat2Img.getMat());
+
+        //get new data to draw from updated breadboard
+        rectanglesToDraw = new ArrayList<Rectangle2D>(bb.getRects());
+
+        //draw new data
+
+        //draw holes
+        g.setColor(Color.green);
+        for(Rectangle2D rec : rectanglesToDraw)
+            g.drawRect((int) rec.getX(), (int) rec.getY(),(int)rec.getWidth(),(int)rec.getHeight());
 
         //draw bounding box
         g.setColor(Color.yellow);
         Rectangle2D box = bb.getBoundingBox();
         g.drawRect((int)box.getX(),(int)box.getY(),(int)box.getWidth(),(int)box.getHeight());
 
-        //draw holes
-        g.setColor(Color.green);
-
-
-        for (Rectangle2D rec : ConturFinder.getHoldesFromImage(bb.getMatImage()))
-            g.drawRect((int) rec.getX(), (int) rec.getY(), (int) rec.getWidth(), (int) rec.getHeight());
 
 
 
-
-
-        //g.finalize();
+        //finalize and draw
+        g.finalize();
         g.dispose();
-
-
         ga.drawImage(image, 0, 0, this);
+    }
+
+    private void drawParallelLine(Graphics2D g, BufferedImage image) {
+        g.setColor(Color.cyan);
+        int parallelLineX1 = image.getWidth() / 4;
+        int parallelLineX2 = parallelLineX1 * 3;
+        int parallelLineY1 = image.getHeight() / 4;
+        int parallelLineY2 = parallelLineY1 * 3;
+        g.drawLine(parallelLineX1, parallelLineY1, parallelLineX2, parallelLineY1);
+        g.drawLine(parallelLineX1, parallelLineY1, parallelLineX1, parallelLineY2);
+
     }
 
     class MyThread extends Thread{

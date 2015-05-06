@@ -26,10 +26,10 @@ public class BreadCrumblerTester {
 
         BufferedImage img = null;
 
-        File f = new File("webcam.JPG");
+        File f = new File("test2.png");
         img = ImageIO.read(f);
         BreadBoard bb = new BreadBoard(img, f);
-        LED.searchInAreaSIFT(bb.getMatImage(),null);
+        //LED.searchInAreaSIFT(bb.getMatImage(),null);
 
 
     }

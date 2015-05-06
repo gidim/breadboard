@@ -22,11 +22,6 @@ public class Step {
     public String getInstruction(){
 
         String instruction = "Pickup " + part.getName() + " " + part.getDescription() + "\n";
-
-        for(int i = 0  ; i < holes.size() ; i++){
-            instruction += "Insert leg " + part.getLeg(i).toString() + "to Tutorial.Hole " + holes.get(i).toString() + "\n";
-        }
-
         return instruction;
     }
 
@@ -41,9 +36,11 @@ public class Step {
         if(part instanceof LED){
             //generate a lookup area the size of the two LED holes
             Rectangle2D.Double lookupArea = new Rectangle2D.Double(to.getRect().getX(),to.getRect().getY(),75,75);
-            LED.searchInAreaSIFT(BreadBoard.getInstance().getMatImage(),lookupArea);
+            if(LED.searchInAreaSIFT(BreadBoard.getInstance().getMatImage(),lookupArea).size() > 0)
+                return true;
         }
 
+        return false;
     }
 
     public Part getPart() {

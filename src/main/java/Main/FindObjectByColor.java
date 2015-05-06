@@ -40,8 +40,8 @@ public class FindObjectByColor {
         cvSaveImage("hsvthreshold.jpg", thresholdImage);
         Dimension position = getCoordinates(thresholdImage);
         location = new Point2D.Double(position.width,position.height);
-        System.out.println("Dimension of original Image : " + thresholdImage.width() + " , " + thresholdImage.height());
-        System.out.println("Position of red spot    : x : " + position.width + " , y : " + position.height);
+        //System.out.println("Dimension of original Image : " + thresholdImage.width() + " , " + thresholdImage.height());
+        //System.out.println("Position of red spot    : x : " + position.width + " , y : " + position.height);
 
     }
 
@@ -63,7 +63,7 @@ public class FindObjectByColor {
     private IplImage hsvThreshold(IplImage orgImg) {
         // 8-bit, 3- color =(RGB)
         IplImage imgHSV = cvCreateImage(cvGetSize(orgImg), 8, 3);
-        System.out.println(cvGetSize(orgImg));
+        //System.out.println(cvGetSize(orgImg));
         cvCvtColor(orgImg, imgHSV, CV_BGR2HSV);
         // 8-bit 1- color = monochrome
         IplImage imgThreshold = cvCreateImage(cvGetSize(orgImg), 8, 1);
