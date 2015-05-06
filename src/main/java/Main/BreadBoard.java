@@ -75,7 +75,7 @@ public class BreadBoard {
     private Mat imageAsMat;
     Rectangle2D boundingBox;
     private BufferedImage bImage;
-    public ArrayList<LinkedList<Rectangle2D>> rectLines; //todo:remove
+    public ArrayList<LinkedList<Rectangle2D>> rectLines;
     private Color holeSampleFromUser;
     private LinkedList<Rectangle2D> rects;
     private int numOfRectsCal = 0;
@@ -145,7 +145,6 @@ public class BreadBoard {
         }
         else if(numOfRectsCal > NUMBER_OF_RECTS_CALC)
             refreshHolesData(rawMatrix);
-
     }
 
     private void refreshHolesData(Color [][] mat) {
@@ -169,6 +168,32 @@ public class BreadBoard {
         rawWidth = rawMatrix[0].length;
         rawHeight = rawMatrix.length;
         boundingBox = getBoundingBox();
+    }
+
+
+    public Hole getHole(String letter, String number) {
+        int r;
+        int c;
+
+        if(letter.equals("L-")) {
+            c = 0;
+        }
+        else if(letter.equals("L+")) {
+            c = 1;
+        }
+        else if(letter.equals("R-")) {
+            c = NUM_OF_COLS - 1;
+        }
+        else if(letter.equals("R+")) {
+            c = NUM_OF_COLS - 2;
+        }
+        else {
+            c = letter.toCharArray()[0] - 63;
+        }
+
+        r = Integer.parseInt(number) - 1;
+        System.out.println(r + " " + c);
+        return this.holeMatrix[r][c];
     }
 
     private BufferedImage matToBufferedImage(Mat frame) {
@@ -204,11 +229,10 @@ public class BreadBoard {
     public Hole[][] getHoleMatrix() {
         Hole[][] mat = initHoleMatrix();
 
-        //rects = ContourFinder.getHolesFromImage(imageAsMat); //attempt
-
         ArrayList<LinkedList<Rectangle2D>> rectLines = partitionRectsToLines(rects);
-        //fillMissingRects(rectLines); //attempt
-//
+        fillMissingRects(rectLines); //attempt
+
+//uncomment:
         int i = 0;
         for(LinkedList<Rectangle2D> rectLine : rectLines) {
             int startPoint = 0;
@@ -361,7 +385,7 @@ public class BreadBoard {
                         } else {
                             //check if missing rects in the middle/beginning
                             Rectangle2D currRect = currLine.get(j);
-                            if (!rectInSameColAsPoint(currRect, relativeDesiredRectYCoords[j])) {
+                            if (!rectInSameColAsPoint(currRect, relativeDesiredRectYCoords[rectJ])) {
                                 Rectangle2D missingRect = new Rectangle2D.Double(currRect.getMinX(), relativeDesiredRectYCoords[rectJ], currRect.getWidth(), currRect.getHeight());
                                 currLine.add(j, missingRect);
                             }
@@ -1251,6 +1275,8 @@ public class BreadBoard {
     }
 
     public void blockTillDone() {
+        //todo: replace average with motion detection
+
         //step 1 - sample current breadboard status
         double completeHolesAverage = calculateAllHolesAverage();
         boolean handWasIn = false;
@@ -1355,9 +1381,6 @@ public class BreadBoard {
         return rects;
     }
 
-    public Hole getHole(String fromCol, String fromRow) {
-        return null;
-    }
 
 
 //    /**

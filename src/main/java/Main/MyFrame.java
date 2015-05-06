@@ -86,9 +86,9 @@ public class MyFrame extends JFrame {
         //now iterate over each step, prompt the user, wait till he finishes, verify and continue
         for(Step step : circuit.getSteps()){
             //Prompt User
-            System.out.printf(step.getInstruction());
+            System.out.printf(step.getInstruction()); //todo: fix getInstruction
             //Wait till user finishes
-            BreadBoard.getInstance().blockTillDone();//todo: check
+            BreadBoard.getInstance().blockTillDone();
             //verify that the part is in the right place
             while(!step.isValid()){
                 System.out.println("Try Again");
@@ -97,6 +97,7 @@ public class MyFrame extends JFrame {
             System.out.println("Step completed!");
         }
     }
+
 
     /**
      * Create the frame.

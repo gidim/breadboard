@@ -49,8 +49,6 @@ public class Hole {
         setRangedRawMatrixFromFullMatrix(mat);
     }
 
-
-
     /**
      * copies the pixel data from the original raw data matrix to this hole ranged raw matrix
      * @param matrix
