@@ -8,9 +8,19 @@ import java.util.ArrayList;
 public abstract class Part {
 
     ArrayList<Leg> legs;
-    ArrayList<Hole> location; //current location on the board
     String name;
     private String description;
+    public String fromCol;
+    public String fromRow;
+    public String toCol;
+    public String toRow;
+
+    public Part(String col1, String row1, String col2, String row2, String name) {
+        this.fromCol = col1;
+        this.fromRow = row1;
+        this.toCol = col2;
+        this.toRow = row2;
+    }
 
 
     public String getName() {

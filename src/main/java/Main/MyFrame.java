@@ -3,7 +3,7 @@ package Main;
 /**
  * Created by Gideon on 5/2/15.
  */
-import Tutorial.LED;
+import Tutorial.*;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -27,6 +27,8 @@ public class MyFrame extends JFrame {
      * Launch the application.
      */
     public static void main(String[] args) {
+
+        //START VIDEO FRAME
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
@@ -37,6 +39,56 @@ public class MyFrame extends JFrame {
                 }
             }
         });
+
+        //CONFIGURE TUTORIAL
+        Circuit circuit = new Circuit();
+        //step 1
+        Step step1 = new Step();
+        Wire wire1 = new Wire("j","14", "Left Blue","17","Yellow");
+        step1.setPart(wire1);
+        //step 2
+        Wire wire2 = new Wire("J","13", "J","9","Green");
+        Step step2 = new Step();
+        step2.setPart(wire2);
+        //step 3
+        LED led = new LED("I","14","I","13");
+        Step step3 = new Step();
+        step3.setPart(led);
+        //step 4
+        Resistor res = new Resistor("J","6","Right Red","6");
+        Step step4 = new Step();
+        step4.setPart(res);
+        //step 5
+        Switch sw = new Switch("F","6","I","9");
+        Step step5 = new Step();
+        step5.setPart(res);
+
+        circuit.addStep(step1);
+        circuit.addStep(step2);
+        circuit.addStep(step3);
+        circuit.addStep(step4);
+        circuit.addStep(step5);
+
+        //circut/Tutorial is in the system
+
+        //now iterate over each step, prompt the user, wait till he finishes, verify and continue
+        for(Step step : circuit.getSteps()){
+            //Prompt User
+            System.out.printf(step.getInstruction());
+            //Wait till user finishes
+            BreadBoard.getInstance().blockTillDone();
+            //verify that the part is in the right place
+            while(!step.isValid()){
+
+            }
+            System.out.println("Step completed!");
+
+        }
+
+
+
+
+
     }
 
     /**

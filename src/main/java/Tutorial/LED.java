@@ -8,7 +8,6 @@ import org.opencv.core.MatOfDMatch;
 import org.opencv.core.MatOfKeyPoint;
 import org.opencv.features2d.*;
 import org.opencv.highgui.Highgui;
-import org.opencv.imgproc.Imgproc;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
@@ -28,10 +27,12 @@ public class LED extends Part {
     public static final int COLOR_SENSITIVTY = 10;
     Color onColor;
 
-    public LED(Mat image, Rectangle2D.Double area){
 
-
+    public LED(String col1, String row1, String col2, String row2) {
+        super(col1,row1,col2,row2, "LED");
     }
+
+
 
     /**
      * Checks if the provided area in the image contains an LED

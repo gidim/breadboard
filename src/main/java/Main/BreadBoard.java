@@ -36,6 +36,7 @@ public class BreadBoard {
     public static final int BLUR_LEVEL = 3;
     private static final int HOLE_GREYSCALE_THRESHOLD_SAMPLE = 40;
     private static final double SAME_COL_RECTS_THRESH = 7;
+    public static final int HAND_IN_FRAME_SENSITIVITY = 20;
 
 
     /** Singleton */
@@ -1189,6 +1190,44 @@ public class BreadBoard {
         }
 
         //holeSampleFromUser = null;
+    }
+
+    public void blockTillDone() {
+        //step 1 - sample current breadboard status
+        double completeHolesAverage = calculateAllHolesAverage();
+        boolean handWasIn = false;
+
+        while(true){
+            try {
+                Thread.sleep(3); //easy on the busy wait
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            double newAvg = calculateAllHolesAverage(); // realtime sample
+            if(!Utils.isEqualInRange(completeHolesAverage,newAvg,HAND_IN_FRAME_SENSITIVITY)) // something changed!
+                handWasIn = true;
+            else{ //same as normal
+                if(handWasIn)
+                    return;
+            }
+        }
+    }
+
+    private double calculateAllHolesAverage() {
+        int avg = 0 ;
+        int counter = 0;
+
+        for(int i = 0 ; i < holeMatrix.length ; i++) {
+            for (int j = 0; j < holeMatrix[0].length; j++) {
+                Color singleAvg = holeMatrix[i][j].getAverageInArea();
+                int red = singleAvg.getRed();
+                int green = singleAvg.getGreen();
+                int blue = singleAvg.getBlue();
+                avg += ((red + green + blue) / 3);
+            }
+        }
+
+        return avg;
     }
 
 //    /**

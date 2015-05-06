@@ -1,7 +1,5 @@
 package Tutorial;
 
-import Main.BreadBoard;
-
 import java.awt.*;
 import java.util.ArrayList;
 
@@ -13,7 +11,9 @@ public class Resistor extends Part {
     ArrayList<Bands> bands;
     private Color[][] rangedRawMatrix; //subset of raw image data of this part's area only
 
-
+    public Resistor(String j, String s, String s1, String s2) {
+        super(j, s, s1, s2, "Resistor");
+    }
 
 
     public static ArrayList<Bands> getBandsFromImage(Color [][] rawImageData){

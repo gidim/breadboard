@@ -11,6 +11,11 @@ public class Circuit{
     public Step currentStep;
 
 
+    public Circuit(){
+        steps = new ArrayList<Step>();
+        currentStep = null;
+    }
+
     /**
      *
      * @return true if if all the steps up to including @currentStep are valid
@@ -51,6 +56,10 @@ public class Circuit{
 
     public void setSteps(ArrayList<Step> steps) {
         this.steps = steps;
+    }
+
+    public void addStep(Step s){
+        steps.add(s);
     }
 
     public Step getCurrentStep() {

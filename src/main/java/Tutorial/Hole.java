@@ -23,10 +23,13 @@ public class Hole {
         this.row = String.valueOf(rowNum);
         this.col = Hole.colToString(colNum);
         this.rect = null;
-
         state = false;
     }
 
+    public Hole(String letter, String number){
+        this.row = letter;
+        this.col = number;
+    }
 
     //todo: since constructor is never called, find where to initialize values
     public Hole(int rowNum, int colNum,Rectangle2D rect, Color[][] matrix) {
@@ -56,7 +59,7 @@ public class Hole {
      * Calculates the average color in the bounding box
      * @return
      */
-    private Color getAverageInArea() {
+    public Color getAverageInArea() {
 
         int r = 0;
         int g = 0;
@@ -140,7 +143,7 @@ public class Hole {
         this.col = col;
     }
 
-    public boolean isState() {
+    public boolean isInUse() {
         return state;
     }
 
