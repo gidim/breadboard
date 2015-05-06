@@ -60,7 +60,7 @@ public class LED extends Part {
         ArrayList<MatOfDMatch> matches = new ArrayList<MatOfDMatch>();
         int size = NUM_OF_LED_TO_SEARCH;
         matcher.knnMatch(des1, des2, matches, size);
-        System.out.println(matches.size());
+        //System.out.println(matches.size());
         Features2d f2d = new Features2d();
         Mat res = new Mat();
 
@@ -72,7 +72,7 @@ public class LED extends Part {
             pointsFound.add(new Point2D.Double(k[d.trainIdx].pt.x, k[d.trainIdx].pt.y));
         }
 
-        System.out.println(pointsFound);
+        //System.out.println(pointsFound);
 
         /*
         //filter matches by area

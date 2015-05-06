@@ -29,13 +29,13 @@ public class BreadBoard {
     private static final int NUM_OF_CLOSEST_POINTS_TO_CHECK_FOR_AVE = 4;
     private static final double EXTENDED_HOLE_ARRAY_SIZE_COEFFICIENT = 3;
     private static final double AVE_DIST_THRESH_COEFFICIENT = 0.22;
-    private static final double RECT_SIZE_ELIMINATION_DIFF_COEFFICIENT = 0.3;
+    public static final double RECT_SIZE_ELIMINATION_DIFF_COEFFICIENT = 0.3;
     private static final int NUMBER_OF_CLOSEST_POINTS_TO_CHECK_FOR_ELIMINATION = 2;
     private static final int HOLE_GREYSCALE_THRESHOLD = 170;
-    private static final double SAME_LINE_RECTS_THRESH = 7;
+    private static final double SAME_COL_RECTS_THRESH = 12;
     public static final int BLUR_LEVEL = 3;
     private static final int HOLE_GREYSCALE_THRESHOLD_SAMPLE = 40;
-    private static final double SAME_COL_RECTS_THRESH = 7;
+    private static final double SAME_ROW_RECTS_THRESH = 12;
 
 
     /** Singleton */
@@ -56,11 +56,11 @@ public class BreadBoard {
 
 
     //constants
-    final int NUM_OF_ROWS = 14;
-    final int NUM_OF_ROWS_SIDES = 10;
-    final int NUM_OF_COLS = 63;
-    final int NUM_OF_COLS_LESS = 50;
-    final int NUM_OF_LESSER_COLS = 13;
+    final int NUM_OF_ROWS = 63;
+    final int NUM_OF_ROWS_SIDES = 50;
+    final int NUM_OF_COLS = 14;
+    final int NUM_OF_COLS_LESS = 10;
+    final int NUM_OF_LESSER_COLS = 4;
     final int NUM_OF_HOLES = NUM_OF_ROWS * NUM_OF_COLS - (NUM_OF_ROWS - NUM_OF_ROWS_SIDES) * NUM_OF_LESSER_COLS;
 
     //fields
@@ -74,6 +74,7 @@ public class BreadBoard {
     private BufferedImage bImage;
     public ArrayList<LinkedList<Rectangle2D>> rectLines; //todo:remove
     private Color holeSampleFromUser;
+    private LinkedList<Rectangle2D> rects;
 
     /**
      * Constructor
@@ -93,16 +94,36 @@ public class BreadBoard {
 
     }
 
+    public BreadBoard() {
+        this.imageAsMat = null;
+        bImage = null;
+        //holeMatrix = getHoleMatrix();
+        this.singleton = this;
+    }
+
     public BreadBoard(BufferedImage image, File f) {
         bImage = image;
         rawMatrix = imageToMatrix(bImage);
         rawWidth = rawMatrix[0].length;
         rawHeight = rawMatrix.length;
+        this.imageAsMat = bufferedImageToMat(image);
+        BufferedImage tmpBImage = matToBufferedImage(Utils.blur(this.imageAsMat, BLUR_LEVEL));
+        rawMatrixSmoothed = imageToMatrix(tmpBImage);
         boundingBox = getBoundingBox();
         holeMatrix = getHoleMatrix();
-        this.imageAsMat = bufferedImageToMat(image);
         this.singleton = this;
 
+    }
+
+    public void setMat(Mat frame) {
+        this.imageAsMat = frame;
+        bImage = matToBufferedImage(frame);
+        BufferedImage tmpBImage = matToBufferedImage(Utils.blur(frame, BLUR_LEVEL));
+        rawMatrix = imageToMatrix(bImage);
+        rawMatrixSmoothed = imageToMatrix(tmpBImage);
+        rawWidth = rawMatrix[0].length;
+        rawHeight = rawMatrix.length;
+        boundingBox = getBoundingBox();
     }
 
     private BufferedImage matToBufferedImage(Mat frame) {
@@ -125,12 +146,42 @@ public class BreadBoard {
     private Mat bufferedImageToMat(BufferedImage image){
 
         byte[] pixels = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
-        Mat mat = new Mat();
+        Mat mat = new Mat(image.getHeight(), image.getWidth(), CvType.CV_8UC3);
         mat.put(0, 0, pixels);
         return mat;
     }
 
 
+    /**
+     * Builds the full hole matrix
+     * @return
+     */
+    public Hole[][] getHoleMatrix() {
+        Hole[][] mat = initHoleMatrix();
+        getHoleRects();
+//        ArrayList<LinkedList<Rectangle2D>> rectLines = getHoleRects(holeLocations);
+//        int i = 0;
+//        for(LinkedList<Rectangle2D> rectLine : rectLines) {
+//            int startPoint = 0;
+//            if ((((i - 1) % 6) == 0) || (i == 0) || (i == NUM_OF_ROWS - 1)) {
+//                startPoint = (NUM_OF_COLS - NUM_OF_COLS_LESS) / 2;
+//            }
+//            int j = startPoint;
+//            int j = 0;
+//            for(Rectangle2D rect: rectLine) {
+//                if(mat[i][j] != null) {
+//                    mat[i][j].setRect(rect);
+//                }
+//                j++;
+//            }
+//            i++;
+//        }
+        //minHoleLocations = eliminateFalseHoles(holeLocations, averageDistance);
+
+        //drawHoleMat(mat);
+
+        return mat;
+    }
 
 
     /**
@@ -151,30 +202,30 @@ public class BreadBoard {
         int sum = 0;
         for(int i = 0; i < NUM_OF_ROWS; i++) {
             int colNum = NUM_OF_COLS;
-//            int startPoint = 0;
-//            if((((i - 1) % 6) == 0) || (i == 0) || (i == NUM_OF_ROWS - 1)) {
-//                colNum = NUM_OF_COLS_LESS;
-//                startPoint = (NUM_OF_COLS - NUM_OF_COLS_LESS) / 2;
-//            }
-//            for(int j = 0; j < startPoint; j++) {
-//                //fill left side of off lines with null
-//                mat[i][j] = null;
-//            }
-//            for(int j = startPoint + colNum; j < NUM_OF_COLS; j++) {
-//                //fill right side of off lines with null
-//                mat[i][j] = null;
-//            }
-            if((i == 0) || (i == 1) || (i == 12) || (i == 13)) {
+            int startPoint = 0;
+            if((((i - 1) % 6) == 0) || (i == 0) || (i == NUM_OF_ROWS - 1)) {
                 colNum = NUM_OF_COLS_LESS;
+                startPoint = (NUM_OF_COLS - NUM_OF_COLS_LESS) / 2;
             }
-
-            for(int j = 0; j < colNum; j++) {
-                mat[i][j] = new Hole(i, j);
+            for(int j = 0; j < startPoint; j++) {
+                //fill left side of off lines with null
+                mat[i][j] = null;
             }
-            for(int j = colNum; j < NUM_OF_COLS; j++) {
+            for(int j = startPoint + colNum; j < NUM_OF_COLS; j++) {
                 //fill right side of off lines with null
                 mat[i][j] = null;
             }
+//            if((i == 0) || (i == 1) || (i == 12) || (i == 13)) {
+//                colNum = NUM_OF_COLS_LESS;
+//            }
+//
+//            for(int j = 0; j < colNum; j++) {
+//                mat[i][j] = new Hole(i, j);
+//            }
+//            for(int j = colNum; j < NUM_OF_COLS; j++) {
+//                //fill right side of off lines with null
+//                mat[i][j] = null;
+//            }
         }
 
         return mat;
@@ -186,84 +237,44 @@ public class BreadBoard {
     }
 
     LinkedList<Point2D> minHoleLocations;
-    /**
-     * Builds the full hole matrix
-     * @return
-     */
-    private Hole[][] getHoleMatrix() {
-        Hole[][] mat = initHoleMatrix();
 
-        holeMatrix = mat;
 
-        //find first hole:
-        int distanceFromTop = (int)((boundingBox.getHeight() * A1_TO_TOP) / 100);
-        int distanceFromLeft = (int)((boundingBox.getHeight()* A1_TO_LEFT) / 100);
+    public LinkedList<Rectangle2D> updateRects() {
+        LinkedList<Rectangle2D> newRects = new LinkedList<Rectangle2D>();
+        LinkedList<Rectangle2D> anotherContourBatch =  ContourFinder.getHolesFromImage(getMatImage());
 
-        int holeHeight = (int) ((boundingBox.getHeight() * HOLE_HEIGHT) / 100);
-        int holeWidth = (int) ((boundingBox.getHeight() * HOLE_WIDTH) / 100);
-
-        Hole holeA1 = mat[0][2];
-        holeA1.setRect(new Rectangle2D.Double(boundingBox.getMinX() + distanceFromLeft, boundingBox.getMinY() + distanceFromTop, holeWidth, holeHeight));
-
-        //sift magic:
-        //Point2D[] holeLocations = findHolesInImageUsingSIFT(NUM_OF_HOLES);
-
-        //double averageDistance = getAverageDistance(holeLocations);
-
-        Point2D[] holeLocations = findHolesInImageUsingSIFT((int) (NUM_OF_HOLES * EXTENDED_HOLE_ARRAY_SIZE_COEFFICIENT));
-
-        drawPointArray(holeLocations);
-        getHoleRects(holeLocations);
-
-        ArrayList<LinkedList<Rectangle2D>> rectLines = getHoleRects(holeLocations);
-        int i = 0;
-        for(LinkedList<Rectangle2D> rectLine : rectLines) {
-//            int startPoint = 0;
-//            if ((((i - 1) % 6) == 0) || (i == 0) || (i == NUM_OF_ROWS - 1)) {
-//                startPoint = (NUM_OF_COLS - NUM_OF_COLS_LESS) / 2;
-//            }
-//            int j = startPoint;
-            int j = 0;
-            for(Rectangle2D rect: rectLine) {
-                if(mat[i][j] != null) {
-                    mat[i][j].setRect(rect);
-                }
-                j++;
-            }
-            i++;
+        if(rects == null) {
+            rects = new LinkedList<Rectangle2D>(anotherContourBatch);
+            return rects;
         }
-        //minHoleLocations = eliminateFalseHoles(holeLocations, averageDistance);
+        for(Rectangle2D newContour : anotherContourBatch) {
+            boolean intersects = false;
+            for(Rectangle2D rect : rects) {
+                if(newContour.intersects(rect)) {
+                    intersects = true;
+                }
+            }
+            if(!intersects) {
+                newRects.add(newContour);
+            }
+        }
+        System.out.println(newRects.size());
+        rects.addAll(newRects);
 
-        //drawHoleMat(mat);
-
-        return mat;
+        return rects;
     }
 
-    private ArrayList<LinkedList<Rectangle2D>> getHoleRects(Point2D[] extendedPoints) {
-        LinkedList<Rectangle2D> rects = new LinkedList<Rectangle2D>();
+    private ArrayList<LinkedList<Rectangle2D>> getHoleRects() {
 
-        //flood fill
-        for(Point2D p : extendedPoints) {
-            //p = new Point2D.Double(p.getX(), p.getY() - 10);
-            boolean alreadyInRect = false;
-            for(Rectangle2D r : rects) {
-                if (r.contains(p)) {
-                    alreadyInRect = true;
-                    break;
-                }
-            }
-            if(!alreadyInRect) {
-                rects.add(floodFillHole(p));
-            }
-        }
 
-        rects = eliminateFalseRects(rects);
-        //drawRectList(rects);
-        drawRectList(rects);
-        ArrayList<LinkedList<Rectangle2D>> rectLines = partitionRectsToLines(rects);
-        this.rectLines = rectLines;
+        //rects = eliminateFalseRects(rects);
+        //drawRectList(rects, "imagenew2.jpg");
 
-        fillMissingRects(rectLines); //mutates rectLines
+
+        //ArrayList<LinkedList<Rectangle2D>> rectLines = partitionRectsToLines(rects);
+        //drawRectLineListAndBoundingBox(rectLines, this.boundingBox);
+
+        //fillMissingRects(rectLines); //mutates rectLines
 
         return rectLines;
 
@@ -272,7 +283,7 @@ public class BreadBoard {
     private void fillMissingRects(ArrayList<LinkedList<Rectangle2D>> rectLines) {
         Rectangle2D rectsBoundingBox = getBoundingBoxFromRectLines(rectLines);
 
-        double[] relativeDesiredRectXCoords = getRelativeDesiredRectXCoords(rectLines, rectsBoundingBox);
+        double[] relativeDesiredRectYCoords = getRelativeDesiredRectYCoords(rectLines, rectsBoundingBox);
 
 
         //drawRectLineListAndBoundingBox(rectLines, rectsBoundingBox);
@@ -284,35 +295,26 @@ public class BreadBoard {
         else {
             for (int i = 0; i < NUM_OF_ROWS; i++) {
                 int colNum = NUM_OF_COLS; //desired line length
-                if((i == 0) || (i == 1) || (i == 12) || (i == 13)) {
+                int startPoint = 0;
+                if ((((i - 1) % 6) == 0) || (i == 0) || (i == NUM_OF_ROWS - 1)) {
                     colNum = NUM_OF_COLS_LESS;
+                    startPoint = (NUM_OF_COLS - NUM_OF_COLS_LESS) / 2;
                 }
 
                 LinkedList<Rectangle2D> currLine = rectLines.get(i);
                 if (currLine.size() < colNum) {
-                    for(int j = 0, rectJ = 0; j < colNum; j++, rectJ++) {
-                        if((colNum < NUM_OF_COLS) && ((j == 0))) {
-                            //lines with less holes start from 2;
-                            j += 2;
-                        }
-                        if((colNum < NUM_OF_COLS) && ((j - 1) % 6 == 0)) {
-                            //lines with less holes skip gaps
-                            j++;
-                        }
-                        if((colNum < NUM_OF_COLS) && ((j == NUM_OF_COLS - 1))) {
-                            break; //lines with less holes no rect in last
-                        }
-
-                        if (rectJ >= currLine.size()) {
+                    for(int j = 0; j < colNum; j++) {
+                        int rectJ = startPoint + j;
+                        if (j >= currLine.size()) {
                             //rect missing at the end of the line, just add
-                            Rectangle2D missingRect = new Rectangle2D.Double(relativeDesiredRectXCoords[j], currLine.getFirst().getMinY(), currLine.getFirst().getWidth(), currLine.getFirst().getHeight());
+                            Rectangle2D missingRect = new Rectangle2D.Double(currLine.getFirst().getMinX(), relativeDesiredRectYCoords[j], currLine.getFirst().getWidth(), currLine.getFirst().getHeight());
                             currLine.addLast(missingRect);
                         } else {
                             //check if missing rects in the middle/beginning
                             Rectangle2D currRect = currLine.get(rectJ);
-                            if (!rectInSameColAsPoint(currRect, relativeDesiredRectXCoords[j])) {
-                                Rectangle2D missingRect = new Rectangle2D.Double(relativeDesiredRectXCoords[j], currRect.getMinY(), currRect.getWidth(), currRect.getHeight());
-                                currLine.add(j, missingRect);
+                            if (!rectInSameColAsPoint(currRect, relativeDesiredRectYCoords[j])) {
+                                Rectangle2D missingRect = new Rectangle2D.Double(currRect.getMinX(), relativeDesiredRectYCoords[j], currRect.getWidth(), currRect.getHeight());
+                                currLine.add(rectJ, missingRect);
                             }
                         }
                     }
@@ -325,8 +327,8 @@ public class BreadBoard {
 
     }
 
-    private boolean rectInSameColAsPoint(Rectangle2D currRect, double relativeDesiredRectXCoord) {
-        if(Math.abs(currRect.getMinX() - relativeDesiredRectXCoord) < SAME_COL_RECTS_THRESH) {
+    private boolean rectInSameColAsPoint(Rectangle2D currRect, double relativeDesiredRectYCoord) {
+        if(Math.abs(currRect.getMinY() - relativeDesiredRectYCoord) < SAME_ROW_RECTS_THRESH) {
             return true;
 
         }
@@ -335,8 +337,8 @@ public class BreadBoard {
         }
     }
 
-    private double[] getRelativeDesiredRectXCoords(ArrayList<LinkedList<Rectangle2D>> rectLines, Rectangle2D rectsBoundingBox) {
-        double[] desiredRectXCoords = new double[NUM_OF_COLS];
+    private double[] getRelativeDesiredRectYCoords(ArrayList<LinkedList<Rectangle2D>> rectLines, Rectangle2D rectsBoundingBox) {
+        double[] desiredRectYCoords = new double[NUM_OF_COLS];
 
         LinkedList<Rectangle2D> fullLine = null;
         for(int i = 0; i < rectLines.size(); i++) {
@@ -353,11 +355,11 @@ public class BreadBoard {
         else {
             int i = 0;
             for (Rectangle2D rect : fullLine) {
-                desiredRectXCoords[i] = rect.getMinX();
+                desiredRectYCoords[i] = rect.getMinY();
                 i++;
             }
         }
-        return desiredRectXCoords;
+        return desiredRectYCoords;
     }
 
     private Rectangle2D getBoundingBoxFromRectLines(ArrayList<LinkedList<Rectangle2D>> rectLines) {
@@ -397,10 +399,10 @@ public class BreadBoard {
         Collections.sort(rects, new Comparator<Rectangle2D>() {
             @Override
             public int compare(Rectangle2D o1, Rectangle2D o2) {
-                if(o1.getCenterY() < o2.getCenterY()) {
+                if(o1.getCenterX() < o2.getCenterX()) {
                     return -1;
                 }
-                else if(o1.getCenterY() > o2.getCenterY()) {
+                else if(o1.getCenterX() > o2.getCenterX()) {
                     return 1;
                 }
                 else {
@@ -429,10 +431,10 @@ public class BreadBoard {
             Collections.sort(currLine, new Comparator<Rectangle2D>() {
                 @Override
                 public int compare(Rectangle2D o1, Rectangle2D o2) {
-                    if(o1.getCenterX() < o2.getCenterX()) {
+                    if(o1.getCenterY() < o2.getCenterY()) {
                         return -1;
                     }
-                    else if(o1.getCenterX() > o2.getCenterX()) {
+                    else if(o1.getCenterY() > o2.getCenterY()) {
                         return 1;
                     }
                     else {
@@ -443,11 +445,12 @@ public class BreadBoard {
             rectLines.add(currLine);
         }
 
+        System.out.println(rectLines.size());
         return rectLines;
     }
 
     private boolean rectsInSameLine(Rectangle2D rect1, Rectangle2D rect2) {
-        if(Math.abs(rect1.getCenterY() - rect2.getCenterY()) < SAME_LINE_RECTS_THRESH) {
+        if(Math.abs(rect1.getCenterX() - rect2.getCenterX()) < SAME_COL_RECTS_THRESH) {
             return true;
 
         }
@@ -491,7 +494,7 @@ public class BreadBoard {
     }
 
 
-    private double getAverageHeightToWidthRatio(LinkedList<Rectangle2D> rects) {
+    public double getAverageHeightToWidthRatio(LinkedList<Rectangle2D> rects) {
         double sum = 0;
         int countedRects = 0;
         for(Rectangle2D rect : rects) {
@@ -508,7 +511,7 @@ public class BreadBoard {
         return ave;
     }
 
-    private double getAverageRectArea(LinkedList<Rectangle2D> rects) {
+    public double getAverageRectArea(LinkedList<Rectangle2D> rects) {
         double sum = 0;
         int countedRects = 0;
         for(Rectangle2D rect : rects) {
@@ -966,7 +969,7 @@ public class BreadBoard {
      * @param rects
      * @return
      */
-    public BufferedImage drawRectList(LinkedList<Rectangle2D> rects) {
+    public BufferedImage drawRectList(LinkedList<Rectangle2D> rects, String filename) {
         BufferedImage image = bImage;
 
         int w = image.getWidth();
@@ -991,7 +994,7 @@ public class BreadBoard {
 
         modified.flush();
 
-        File outputfile = new File("imagenew.jpg");
+        File outputfile = new File(filename);
         try {
             ImageIO.write(modified, "jpg", outputfile);
         }
@@ -1189,6 +1192,59 @@ public class BreadBoard {
         }
 
         //holeSampleFromUser = null;
+    }
+
+    /**
+     * Builds the full hole matrix
+     * @return
+     */
+    private Hole[][] getHoleMatrixOld() {
+        Hole[][] mat = initHoleMatrix();
+
+        holeMatrix = mat;
+
+        //find first hole:
+        int distanceFromTop = (int)((boundingBox.getHeight() * A1_TO_TOP) / 100);
+        int distanceFromLeft = (int)((boundingBox.getHeight()* A1_TO_LEFT) / 100);
+
+        int holeHeight = (int) ((boundingBox.getHeight() * HOLE_HEIGHT) / 100);
+        int holeWidth = (int) ((boundingBox.getHeight() * HOLE_WIDTH) / 100);
+
+        Hole holeA1 = mat[0][2];
+        holeA1.setRect(new Rectangle2D.Double(boundingBox.getMinX() + distanceFromLeft, boundingBox.getMinY() + distanceFromTop, holeWidth, holeHeight));
+
+        //sift magic:
+        //Point2D[] holeLocations = findHolesInImageUsingSIFT(NUM_OF_HOLES);
+
+        //double averageDistance = getAverageDistance(holeLocations);
+
+        Point2D[] holeLocations = findHolesInImageUsingSIFT((int) (NUM_OF_HOLES * EXTENDED_HOLE_ARRAY_SIZE_COEFFICIENT));
+
+        drawPointArray(holeLocations);
+        //getHoleRects(holeLocations);
+
+        //ArrayList<LinkedList<Rectangle2D>> rectLines = getHoleRects(holeLocations);
+        int i = 0;
+        for(LinkedList<Rectangle2D> rectLine : rectLines) {
+//            int startPoint = 0;
+//            if ((((i - 1) % 6) == 0) || (i == 0) || (i == NUM_OF_ROWS - 1)) {
+//                startPoint = (NUM_OF_COLS - NUM_OF_COLS_LESS) / 2;
+//            }
+//            int j = startPoint;
+            int j = 0;
+            for(Rectangle2D rect: rectLine) {
+                if(mat[i][j] != null) {
+                    mat[i][j].setRect(rect);
+                }
+                j++;
+            }
+            i++;
+        }
+        //minHoleLocations = eliminateFalseHoles(holeLocations, averageDistance);
+
+        //drawHoleMat(mat);
+
+        return mat;
     }
 
 //    /**
