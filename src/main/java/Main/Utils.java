@@ -1,12 +1,18 @@
 package Main;
 
+import com.sun.javafx.geom.*;
+import com.sun.javafx.geom.Rectangle;
+import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferByte;
+import java.io.File;
 
 /**
  * Created by Gideon on 4/28/15.
@@ -178,5 +184,35 @@ public class Utils {
         return new Color(red,green,blue);
     }
 
+
+    public static Rectangle2D.Double grow (Rectangle2D rec, double widthGrow, double heightGrow){
+        com.sun.javafx.geom.Rectangle tBox = twoDToRegular(rec);
+        tBox.grow((int)(tBox.width* widthGrow), (int)(tBox.height*heightGrow));
+        return new java.awt.Rectangle.Double(tBox.x,tBox.y,tBox.width,tBox.height);
+    }
+
+
+    public static Rectangle twoDToRegular(Rectangle2D t){
+        Rectangle tBox = new Rectangle((int)t.getX(),(int)t.getY(),(int)t.getWidth(),(int)t.getHeight());
+        return tBox;
+    }
+
+    public static Mat bufferedImageToMat(BufferedImage image){
+
+        byte[] pixels = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
+        Mat mat = new Mat(image.getHeight(), image.getWidth(), CvType.CV_8UC3);
+        mat.put(0, 0, pixels);
+        return mat;
+    }
+
+    public static void saveBufferedImage(BufferedImage image, String filename){
+        File outputfile = new File(filename+".jpg");
+        try {
+            ImageIO.write(image, "jpg", outputfile);
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 }

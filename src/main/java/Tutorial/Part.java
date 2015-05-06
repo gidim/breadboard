@@ -14,12 +14,14 @@ public abstract class Part {
     public String fromRow;
     public String toCol;
     public String toRow;
+    private String code;
 
     public Part(String col1, String row1, String col2, String row2, String name) {
         this.fromCol = col1;
         this.fromRow = row1;
         this.toCol = col2;
         this.toRow = row2;
+        this.name = name;
     }
 
 
@@ -40,5 +42,7 @@ public abstract class Part {
     }
 
 
-
+    public String getCode() {
+        return code;
+    }
 }

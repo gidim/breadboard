@@ -22,7 +22,7 @@ public class VideoCap {
 
     VideoCap(){
         cap = new VideoCapture();
-        cap.open(1);
+        cap.open(0);
     }
 
     Mat getOneMirrorMat() {

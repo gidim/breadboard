@@ -74,12 +74,6 @@ public class ResistorDetector {
         }
     }
 
-    public static void listAllVoices() {
-        System.out.println();
-        System.out.println("All voices available:");
-
-    }
-
     public static Image toBufferedImage(Mat m) {
         int type = BufferedImage.TYPE_BYTE_GRAY;
         if (m.channels() > 1) {
@@ -127,7 +121,7 @@ public class ResistorDetector {
 
     }
 
-    public static Mat doMagic(final Mat image) {
+    public static String doMagic(final Mat image) {
 
         Imgproc.cvtColor(image, image, Imgproc.COLOR_BGR2RGB);
         // Mat small = image.submat(image.rows()/2-100,
@@ -188,6 +182,7 @@ public class ResistorDetector {
             }
         }
 
+        String val = null;
         if (minx >= 0) {
             int miny = (int) avgy[minx];
             int maxy = (int) avgy[maxx];
@@ -266,7 +261,7 @@ public class ResistorDetector {
                         Imgproc.INTER_NEAREST);
                 res.copyTo(image.submat(new Rect(0, 0, res.cols(), res.rows())));
 
-                detect(image, res);
+                val = detect(image, res);
 
             }
 
@@ -274,7 +269,7 @@ public class ResistorDetector {
 
         }
 
-        return image;
+        return val;
     }
 
     static double	codes[][]		= { { 20, 20, 20 }, // black
@@ -330,7 +325,7 @@ public class ResistorDetector {
     private static int	contfound	= 0;
     private static int	lastresult[];
 
-    private static void detect(final Mat image, final Mat res) {
+    private static String detect(final Mat image, final Mat res) {
         double bg[] = new double[3];
 
         for (int x = res.cols() - 50; x < res.cols(); x++) {
@@ -477,6 +472,7 @@ public class ResistorDetector {
                     // synthesizer1.speakPlainText(valuestring, null);
                     // }
                     contfound = 0;
+                    return valuestring;
                 }
             }
             else {
@@ -487,12 +483,13 @@ public class ResistorDetector {
         }
         else {
             contfound -= 2;
-            return;
+            return "";
         }
         if (contfound < 0) {
             contfound = 0;
         }
 
+        return "";
     }
 
     static double calcvalue(final int rings[]) {
@@ -501,5 +498,10 @@ public class ResistorDetector {
         result *= Math.pow(10, rings[2]);
 
         return result;
+    }
+
+    public static String detect(Mat croppedMat) {
+        String val = doMagic(croppedMat);
+        return val;
     }
 }

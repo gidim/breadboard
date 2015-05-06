@@ -10,7 +10,7 @@ import java.awt.geom.Rectangle2D;
  */
 public class Hole {
 
-    public static final int HOLE_EMPTY_NOT_SENSITIVITY = 13;
+    public static final int HOLE_EMPTY_NOT_SENSITIVITY = 25;
     //fields
     private String row;
     private String col;
