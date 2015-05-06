@@ -24,6 +24,24 @@ public abstract class Part {
         this.name = name;
     }
 
+    private int colToInt(String col) {
+        if(col.equals("L+")) {
+            return 0;
+        }
+        else if(col.equals("L-")) {
+            return 1;
+        }
+        else if(col.equals("R+")) {
+            return 12;
+        }
+        else if(col.equals("R-")) {
+            return 13;
+        }
+        else {
+            return col.toCharArray()[0] - 63;
+        }
+    }
+
 
     public String getName() {
         return name;

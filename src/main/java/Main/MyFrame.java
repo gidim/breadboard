@@ -57,9 +57,11 @@ public class MyFrame extends JFrame {
 
         Step step1 = new Step();
         Wire wire1 = new Wire("J","16", "R-","16","Yellow");
+        //Wire wire1 = new Wire("L+","60", "A","60","Yellow");
         step1.setPart(wire1);
         //step 2
         Wire wire2 = new Wire("J","13", "J","9","Green");
+        //Wire wire2 = new Wire("B","52", "C","56","Yellow");
         Step step2 = new Step();
         step2.setPart(wire2);
         //step 3
@@ -74,12 +76,12 @@ public class MyFrame extends JFrame {
         //step 5
         Switch sw = new Switch("F","6","I","9");
         Step step5 = new Step();
-        step5.setPart(res);
+        step5.setPart(sw);
 
         circuit.addStep(step1);
         circuit.addStep(step2);
         circuit.addStep(step3);
-        circuit.addStep(step4);
+//        circuit.addStep(step4);
         circuit.addStep(step5);
 
         //circut/Tutorial is in the system
@@ -144,6 +146,12 @@ public class MyFrame extends JFrame {
                     System.out.println("Click! Not on hole");
                 }
                 MyFrame.click = true;
+
+                //find contours of components
+                Point2D p1 = new Point2D.Double(bb.getHole("J", "14").getRect().getCenterX(), bb.getHole("J", "14").getRect().getCenterY());
+                Point2D p2 = new Point2D.Double(bb.getHole("R+", "17").getRect().getCenterX(), bb.getHole("R+", "17").getRect().getCenterY());
+                ContourFinder.getComponentContours(videoCap.getOneMirrorMat(), p1, p2);
+
             }
         });
 
@@ -189,8 +197,6 @@ public class MyFrame extends JFrame {
         g.setColor(Color.yellow);
         Rectangle2D box = bb.getBoundingBox();
         g.drawRect((int)box.getX(),(int)box.getY(),(int)box.getWidth(),(int)box.getHeight());
-
-
 
 
         //finalize and draw

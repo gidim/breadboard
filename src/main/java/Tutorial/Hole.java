@@ -121,7 +121,7 @@ public class Hole {
 //        }
         if(!Utils.equalsInRange(currentPixelAvg, emptyPixelAvg, HOLE_EMPTY_NOT_SENSITIVITY)) {
             state = true;
-            System.out.println("ding! hole state changed for: " + this.col + this.row);
+            //System.out.println("ding! hole state changed for: " + this.col + this.row);
         }
         else {
             state = false;
