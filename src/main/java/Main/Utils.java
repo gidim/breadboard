@@ -1,6 +1,12 @@
 package Main;
 
+import org.opencv.core.Mat;
+import org.opencv.core.Size;
+import org.opencv.imgproc.Imgproc;
+
 import java.awt.*;
+import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
 
 /**
  * Created by Gideon on 4/28/15.
@@ -36,7 +42,7 @@ public class Utils {
      * @param sensetivity threshold to allow
      * @return true if equals
      */
-    private static boolean isEqualInRange(double a, double b, double sensetivity){
+    public static boolean isEqualInRange(double a, double b, double sensetivity){
 
         if ((a >= (b - sensetivity)) && (a <= (b+sensetivity)) || (b >= (a - sensetivity)) && (b <= (a+sensetivity)) )
             return true;
@@ -67,6 +73,7 @@ public class Utils {
 
         return false;
     }
+
 
     public static boolean isHueEqualsInRage(float[] c1, float[] c2, int colorSensitivty) {
         if(isEqualInRange(c1[0],c2[0],colorSensitivty))
@@ -144,6 +151,30 @@ public class Utils {
             return true;
         }
         return false;
+    }
+
+    public static Mat blur(Mat input, int numberOfTimes){
+        Mat sourceImage = new Mat();
+        Mat destImage = input.clone();
+        for(int i=0;i<numberOfTimes;i++){
+            sourceImage = destImage.clone();
+            Imgproc.blur(sourceImage, destImage, new Size(3.0, 3.0));
+        }
+        return destImage;
+    }
+
+    public static BufferedImage cropImage(BufferedImage src, Rectangle2D rect) {
+        BufferedImage dest = src.getSubimage((int)rect.getX(), (int)rect.getY(), (int)rect.getWidth(), (int)rect.getHeight());
+        return dest;
+    }
+
+    public static Color encodedRGBtoColor(int color){
+
+        int red   = (color >>> 16) & 0xFF;
+        int green = (color >>>  8) & 0xFF;
+        int blue  = (color >>>  0) & 0xFF;
+
+        return new Color(red,green,blue);
     }
 
 
