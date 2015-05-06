@@ -12,6 +12,7 @@ import org.opencv.highgui.Highgui;
 import java.awt.*;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 /**
@@ -21,9 +22,9 @@ public class LED extends Part {
 
     public static final int NUM_OF_LED_TO_SEARCH = 20;
     public static final Color offColor = new Color(253,217,181);
-    public static final float [] offColorHSB = new float[]{33,0.36f,0.89f};
-    static int highH = 30;
-    static int lowH = 15;
+    public static final float [] offColorHSB = new float[]{10,0.36f,0.89f};
+    static int highH = 20;
+    static int lowH = 10;
     public static final int COLOR_SENSITIVTY = 10;
     Color onColor;
 
@@ -113,20 +114,13 @@ public class LED extends Part {
         return points;
     }
 
-    public static ArrayList<Point2D> searchInAreaHSB(Color[][] image, Rectangle2D.Double area){
-        int width = image[0].length;
-        int height = image.length;
-        ArrayList<Point2D> points = new ArrayList<Point2D>();
-
-        if(area == null)
-            area = new Rectangle2D.Double(0,0,width,height);
+    public static Point2D searchInAreaHSB(BufferedImage image){
 
 
+        FindObjectByColor finder = new FindObjectByColor(lowH,highH, image);
+        return finder.getLocation();
 
-        FindObjectByColor finder = new FindObjectByColor(lowH,highH, BreadBoard.getInstance().getBufferedImage());
-        points.add(finder.getLocation());
 
-        return points;
     }
 
     public static void setLowH(int lowH) {

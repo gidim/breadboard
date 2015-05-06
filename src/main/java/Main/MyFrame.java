@@ -53,19 +53,23 @@ public class MyFrame extends JFrame {
         //CONFIGURE TUTORIAL
         Circuit circuit = new Circuit();
         //step 1
+
         Step step1 = new Step();
-        Wire wire1 = new Wire("J","14", "R+","17","Yellow");
+        Wire wire1 = new Wire("J","16", "R-","16","Yellow");
+        //Wire wire1 = new Wire("L+","60", "A","60","Yellow");
         step1.setPart(wire1);
         //step 2
         Wire wire2 = new Wire("J","13", "J","9","Green");
+        //Wire wire2 = new Wire("B","52", "C","56","Yellow");
         Step step2 = new Step();
         step2.setPart(wire2);
         //step 3
-        LED led = new LED("I","14","I","13");
+        LED led = new LED("I","13","I","16");
         Step step3 = new Step();
         step3.setPart(led);
         //step 4
-        Resistor res = new Resistor("J","6","Right Red","6");
+
+        Resistor res = new Resistor("J","6","R+","6");
         Step step4 = new Step();
         step4.setPart(res);
         //step 5
@@ -73,9 +77,9 @@ public class MyFrame extends JFrame {
         Step step5 = new Step();
         step5.setPart(sw);
 
-//        circuit.addStep(step1);
-//        circuit.addStep(step2);
-//        circuit.addStep(step3);
+        circuit.addStep(step1);
+        circuit.addStep(step2);
+        circuit.addStep(step3);
 //        circuit.addStep(step4);
         circuit.addStep(step5);
 
