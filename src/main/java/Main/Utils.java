@@ -215,4 +215,9 @@ public class Utils {
         }
     }
 
+    public static void speak(String str){
+        Kevin instance = Kevin.Instance;
+        instance.speak(str);
+    }
+
 }

@@ -4,6 +4,7 @@ import Tutorial.Hole;
 import org.opencv.core.*;
 import org.opencv.features2d.*;
 import org.opencv.highgui.Highgui;
+import org.opencv.imgproc.Imgproc;
 
 import javax.imageio.ImageIO;
 import javax.media.jai.*;
@@ -1303,30 +1304,67 @@ public class BreadBoard {
     }
 
     public void blockTillDone() {
+        /*
         //todo: replace average with motion detection
 
+        Mat prevFrame = this.imageAsMat.clone();
+        Mat currentFrame = null;
+        Mat nextFrame = null;
+        Mat result1 = new Mat();
+        Mat result2 = new Mat();
+        Mat resultFinal = new Mat();
+
         //step 1 - sample current breadboard status
-        double completeHolesAverage = calculateAllHolesAverage();
         boolean handWasIn = false;
 
         while(true){
             try {
-                Thread.sleep(3); //easy on the busy wait
+                Thread.sleep(30); //easy on the busy wait
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            double newAvg = calculateAllHolesAverage(); // realtime sample
-            if(!Utils.isEqualInRange(completeHolesAverage,newAvg,HAND_IN_FRAME_SENSITIVITY)) { // something changed!
+            currentFrame = this.imageAsMat.clone();
+
+            try {
+                Thread.sleep(30); //easy on the busy wait
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            nextFrame = this.imageAsMat.clone();
+
+            Core.absdiff(prevFrame, nextFrame, result1);
+            Core.absdiff(currentFrame, nextFrame, result2);
+            Core.bitwise_and(result1, result2, resultFinal);
+
+
+            Imgproc.threshold(resultFinal, resultFinal, 35, 255, 0);
+
+            Mat2Image m2i = new Mat2Image();
+            m2i.mat = resultFinal;
+            BufferedImage res = m2i.getImage(m2i.mat);
+
+            File outputfile = new File("difference.jpg");
+            try {
+                ImageIO.write(res, "jpg", outputfile);
+            }
+            catch(Exception e) {
+                e.printStackTrace();
+            }
+            int changed = getChangedPixelsInDifferenceImage(res);
+
+            if(changed > (rawWidth*rawHeight*0.4)) { // something changed!
                 handWasIn = true;
-                //System.out.println("HAND !");
+                System.out.println("HAND !");
             }
             else{ //same as normal
                 if(handWasIn) {
-                    //System.out.println("HAND is OUT!");
+                    System.out.println("HAND is OUT!");
                     return;
                 }
             }
         }
+        */
     }
 
     private double calculateAllHolesAverage() {

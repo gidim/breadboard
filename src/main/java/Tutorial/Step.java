@@ -24,7 +24,9 @@ public class Step {
      */
     public String getInstruction(){
 
-        String instruction = "Pickup " + part.getName() + " " + part.getDescription() + "\n";
+        String instruction = "Pickup " + part.getName() + " " + part.getDescription() + " - .\n\n";
+        instruction+= "Insert leg one to hole " + part.fromCol+part.fromRow + ".\n";
+        instruction+= " Insert leg two to hole " + part.toCol+part.toRow + ".";
         return instruction;
     }
 
@@ -39,7 +41,7 @@ public class Step {
             }
 
         }
-        if(part instanceof LED){ //todo: replace Sift with RGB and fix it
+        if(part instanceof LED){
             //generate a lookup area the size of the two LED holes
 
             int x = (int)from.getRect().getX();
@@ -86,7 +88,7 @@ public class Step {
 
         */
         }
-        if(part instanceof Switch) //todo: add a check for switch
+        if(part instanceof Switch)
             System.out.println();
 
         return false;

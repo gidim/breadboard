@@ -24,6 +24,7 @@ public class MyFrame extends JFrame {
     private JPanel contentPane;
     private List<Point2D> pointsToDraw = new ArrayList<Point2D>();
     private ArrayList<Rectangle2D> rectanglesToDraw = new ArrayList<Rectangle2D>();
+    private ArrayList<String> stringsToDraw = new ArrayList<String>();
     private BreadBoard bb;
 
     int counter = 0;
@@ -67,7 +68,7 @@ public class MyFrame extends JFrame {
         step3.setPart(led);
         //step 4
 
-        Resistor res = new Resistor("J","6","R+","6");
+        Resistor res = new Resistor("J","6","R+","6", "Yellow Purple Red Gold");
         Step step4 = new Step();
         step4.setPart(res);
         //step 5
@@ -86,7 +87,8 @@ public class MyFrame extends JFrame {
         //now iterate over each step, prompt the user, wait till he finishes, verify and continue
         for(Step step : circuit.getSteps()){
             //Prompt User
-            System.out.printf(step.getInstruction()); //todo: fix getInstruction
+            System.out.printf(step.getInstruction());
+            Utils.speak(step.getInstruction());
             //Wait till user finishes
             //BreadBoard.getInstance().blockTillDone();
             //verify that the part is in the right place
@@ -99,10 +101,13 @@ public class MyFrame extends JFrame {
             System.out.println("exited click loop");
             MyFrame.click = false;
 
+            //while(!step.isValid()){
             while(!step.isValid()){
                 click = false;
                 System.out.println("Try Again");
+                Utils.speak("Try Again");
                 System.out.printf(step.getInstruction());
+                Utils.speak(step.getInstruction());
                 while(!click) {
                     Thread.sleep(1);
                 }
