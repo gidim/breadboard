@@ -27,6 +27,8 @@ public class MyFrame extends JFrame {
     private List<Rectangle> rectanglesToDraw = new ArrayList<Rectangle>();
     private BreadBoard bb;
 
+    int counter = 0;
+
     /**
      * Launch the application.
      */
@@ -112,8 +114,15 @@ public class MyFrame extends JFrame {
         //draw holes
         g.setColor(Color.green);
 
-//        for (Rectangle2D rec : bb.updateRects())
-//            g.drawRect((int) rec.getX(), (int) rec.getY(), (int) rec.getWidth(), (int) rec.getHeight());
+        if(counter < 4) {
+            for (Rectangle2D rec : bb.updateRects()) {
+                g.drawRect((int) rec.getX(), (int) rec.getY(), (int) rec.getWidth(), (int) rec.getHeight());
+            }
+        }
+        else if(counter == 4){
+            bb.getHoleMatrix();
+        }
+        counter++;
 
         g.finalize();
         g.dispose();

@@ -102,6 +102,7 @@ public class BreadBoard {
     }
 
     public BreadBoard(BufferedImage image, File f) {
+        this.singleton = this;
         bImage = image;
         rawMatrix = imageToMatrix(bImage);
         rawWidth = rawMatrix[0].length;
@@ -111,7 +112,7 @@ public class BreadBoard {
         rawMatrixSmoothed = imageToMatrix(tmpBImage);
         boundingBox = getBoundingBox();
         holeMatrix = getHoleMatrix();
-        this.singleton = this;
+
 
     }
 
@@ -158,27 +159,32 @@ public class BreadBoard {
      */
     public Hole[][] getHoleMatrix() {
         Hole[][] mat = initHoleMatrix();
-        getHoleRects();
-//        ArrayList<LinkedList<Rectangle2D>> rectLines = getHoleRects(holeLocations);
-//        int i = 0;
-//        for(LinkedList<Rectangle2D> rectLine : rectLines) {
-//            int startPoint = 0;
-//            if ((((i - 1) % 6) == 0) || (i == 0) || (i == NUM_OF_ROWS - 1)) {
-//                startPoint = (NUM_OF_COLS - NUM_OF_COLS_LESS) / 2;
-//            }
-//            int j = startPoint;
-//            int j = 0;
-//            for(Rectangle2D rect: rectLine) {
-//                if(mat[i][j] != null) {
-//                    mat[i][j].setRect(rect);
-//                }
-//                j++;
-//            }
-//            i++;
-//        }
-        //minHoleLocations = eliminateFalseHoles(holeLocations, averageDistance);
 
-        //drawHoleMat(mat);
+        //rects = ContourFinder.getHolesFromImage(imageAsMat); //attempt
+
+        ArrayList<LinkedList<Rectangle2D>> rectLines = partitionRectsToLines(rects);
+        //fillMissingRects(rectLines); //attempt
+//
+        int i = 0;
+        for(LinkedList<Rectangle2D> rectLine : rectLines) {
+            int startPoint = 0;
+            if ((((i - 1) % 6) == 0) || (i == 0) || (i == NUM_OF_ROWS - 1)) {
+                startPoint = (NUM_OF_COLS - NUM_OF_COLS_LESS) / 2;
+            }
+            int j = startPoint;
+            for(Rectangle2D rect: rectLine) {
+                if((i < mat.length) && (j < mat[0].length)) {
+                    if (mat[i][j] != null) {
+                        mat[i][j].setRect(rect);
+                    }
+                    j++;
+                }
+            }
+            i++;
+        }
+
+
+        drawHoleMat(mat);
 
         return mat;
     }
@@ -210,6 +216,9 @@ public class BreadBoard {
             for(int j = 0; j < startPoint; j++) {
                 //fill left side of off lines with null
                 mat[i][j] = null;
+            }
+            for(int j = 0; j < colNum; j++) {
+                mat[i][j + startPoint] = new Hole(i, j);
             }
             for(int j = startPoint + colNum; j < NUM_OF_COLS; j++) {
                 //fill right side of off lines with null
@@ -266,12 +275,8 @@ public class BreadBoard {
 
     private ArrayList<LinkedList<Rectangle2D>> getHoleRects() {
 
-
-        //rects = eliminateFalseRects(rects);
         //drawRectList(rects, "imagenew2.jpg");
-
-
-        //ArrayList<LinkedList<Rectangle2D>> rectLines = partitionRectsToLines(rects);
+        ArrayList<LinkedList<Rectangle2D>> rectLines = partitionRectsToLines(rects);
         //drawRectLineListAndBoundingBox(rectLines, this.boundingBox);
 
         //fillMissingRects(rectLines); //mutates rectLines
@@ -307,14 +312,14 @@ public class BreadBoard {
                         int rectJ = startPoint + j;
                         if (j >= currLine.size()) {
                             //rect missing at the end of the line, just add
-                            Rectangle2D missingRect = new Rectangle2D.Double(currLine.getFirst().getMinX(), relativeDesiredRectYCoords[j], currLine.getFirst().getWidth(), currLine.getFirst().getHeight());
+                            Rectangle2D missingRect = new Rectangle2D.Double(currLine.getFirst().getMinX(), relativeDesiredRectYCoords[rectJ], currLine.getFirst().getWidth(), currLine.getFirst().getHeight());
                             currLine.addLast(missingRect);
                         } else {
                             //check if missing rects in the middle/beginning
-                            Rectangle2D currRect = currLine.get(rectJ);
+                            Rectangle2D currRect = currLine.get(j);
                             if (!rectInSameColAsPoint(currRect, relativeDesiredRectYCoords[j])) {
-                                Rectangle2D missingRect = new Rectangle2D.Double(currRect.getMinX(), relativeDesiredRectYCoords[j], currRect.getWidth(), currRect.getHeight());
-                                currLine.add(rectJ, missingRect);
+                                Rectangle2D missingRect = new Rectangle2D.Double(currRect.getMinX(), relativeDesiredRectYCoords[rectJ], currRect.getWidth(), currRect.getHeight());
+                                currLine.add(j, missingRect);
                             }
                         }
                     }
@@ -393,6 +398,7 @@ public class BreadBoard {
 
 
     private ArrayList<LinkedList<Rectangle2D>> partitionRectsToLines(LinkedList<Rectangle2D> rects) {
+
         ArrayList<LinkedList<Rectangle2D>> rectLines = new ArrayList<LinkedList<Rectangle2D>>();
 
         //sort large list of rects by ascending y to partition into lines
@@ -445,7 +451,8 @@ public class BreadBoard {
             rectLines.add(currLine);
         }
 
-        System.out.println(rectLines.size());
+        //drawRectLineListAndBoundingBox(rectLines, this.boundingBox);
+        System.out.println("partitioned into " + rectLines.size() + " lines");
         return rectLines;
     }
 
@@ -901,7 +908,12 @@ public class BreadBoard {
         for(int i = 0; i < NUM_OF_ROWS; i++) {
             for (int j = 0; j < NUM_OF_COLS; j++) {
                 if(mat[i][j] != null) {
-                    g2d.drawRect((int)mat[i][j].getRect().getMinX(), (int) mat[i][j].getRect().getMinY(), (int) mat[i][j].getRect().getWidth(), (int) mat[i][j].getRect().getHeight());
+                    if(mat[i][j].getRect() == null) {
+                        System.out.println("false negative?");
+                    }
+                    else {
+                        g2d.drawRect((int) mat[i][j].getRect().getMinX(), (int) mat[i][j].getRect().getMinY(), (int) mat[i][j].getRect().getWidth(), (int) mat[i][j].getRect().getHeight());
+                    }
                 }
             }
         }
