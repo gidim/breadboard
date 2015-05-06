@@ -29,6 +29,10 @@ public class BreadCrumblerTester {
         File f = new File("test2.png");
         img = ImageIO.read(f);
         BreadBoard bb = new BreadBoard(img, f);
+        bb.getHole("A", "1");
+        bb.getHole("R-", "55");
+        bb.getHole("J", "63");
+        bb.getHole("L-", "2");
         //LED.searchInAreaSIFT(bb.getMatImage(),null);
 
 
