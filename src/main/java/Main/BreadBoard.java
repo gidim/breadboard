@@ -35,7 +35,7 @@ public class BreadBoard {
     private static final int HOLE_GREYSCALE_THRESHOLD = 170;
     public static final int BLUR_LEVEL = 3;
     private static final int HOLE_GREYSCALE_THRESHOLD_SAMPLE = 40;
-    private static final double SAME_COL_RECTS_THRESH = 7;
+    private static final double SAME_COL_RECTS_THRESH = 12;
     public static final int HAND_IN_FRAME_SENSITIVITY = 20;
     private static final double SAME_ROW_RECTS_THRESH = 12;
     private static final int NUMBER_OF_RECTS_CALC = 2;
@@ -143,8 +143,10 @@ public class BreadBoard {
             ready = true;
             numOfRectsCal++;
         }
-        else if(numOfRectsCal > NUMBER_OF_RECTS_CALC)
-            refreshHolesData(rawMatrix);
+        else if(numOfRectsCal > NUMBER_OF_RECTS_CALC) {
+            //refreshHolesData(rawMatrix);
+            //refreshHolesState(rawMatrix);
+        }
     }
 
     private void refreshHolesData(Color [][] mat) {
@@ -159,6 +161,20 @@ public class BreadBoard {
     }
 
 
+    public void refreshHolesState(Mat mat) {
+        BufferedImage tempBImage = matToBufferedImage(mat);
+        Color[][] cMat = imageToMatrix(tempBImage);
+        for(int y = 0 ; y < holeMatrix.length ; y++){
+            for(int x = 0 ; x < holeMatrix[0].length ; x++) {
+                Hole h = holeMatrix[y][x];
+                if(h!=null)
+
+                    h.refresh(cMat);
+            }
+
+        }
+    }
+
     public void setMat(Mat frame) {
         this.imageAsMat = frame;
         bImage = matToBufferedImage(frame);
@@ -170,6 +186,20 @@ public class BreadBoard {
         boundingBox = getBoundingBox();
     }
 
+
+    public Hole getHole(Point2D p) {
+        for(int i = 0; i < holeMatrix.length; i++) {
+            for(int j = 0; j < holeMatrix[0].length; j++) {
+                if(holeMatrix[i][j] != null) {
+                    if (holeMatrix[i][j].getRect().contains(p)) {
+                        return holeMatrix[i][j];
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
 
     public Hole getHole(String letter, String number) {
         int r;
@@ -252,8 +282,6 @@ public class BreadBoard {
         }
 
 
-        drawHoleMat(mat);
-
         return mat;
     }
 
@@ -286,7 +314,7 @@ public class BreadBoard {
                 mat[i][j] = null;
             }
             for(int j = 0; j < colNum; j++) {
-                mat[i][j + startPoint] = new Hole(i, j);
+                mat[i][j + startPoint] = new Hole(i, j + startPoint);
             }
             for(int j = startPoint + colNum; j < NUM_OF_COLS; j++) {
                 //fill right side of off lines with null
@@ -1290,11 +1318,11 @@ public class BreadBoard {
             double newAvg = calculateAllHolesAverage(); // realtime sample
             if(!Utils.isEqualInRange(completeHolesAverage,newAvg,HAND_IN_FRAME_SENSITIVITY)) { // something changed!
                 handWasIn = true;
-                System.out.println("HAND !");
+                //System.out.println("HAND !");
             }
             else{ //same as normal
                 if(handWasIn) {
-                    System.out.println("HAND is OUT!");
+                    //System.out.println("HAND is OUT!");
                     return;
                 }
             }

@@ -10,7 +10,7 @@ import java.awt.geom.Rectangle2D;
  */
 public class Hole {
 
-    public static final int HOLE_EMPTY_NOT_SENSITIVITY = 20;
+    public static final int HOLE_EMPTY_NOT_SENSITIVITY = 13;
     //fields
     private String row;
     private String col;
@@ -20,7 +20,7 @@ public class Hole {
     Color emptyPixelAvg; //this holds the average pixel value for the original state of empty
 
     public Hole(int rowNum, int colNum) {
-        this.row = String.valueOf(rowNum);
+        this.row = String.valueOf(rowNum + 1);
         this.col = Hole.colToString(colNum);
         this.rect = null;
         state = false;
@@ -42,8 +42,10 @@ public class Hole {
         this.rect = rect;
         this.rangedRawMatrix = new Color[(int)rect.getHeight()][(int)rect.getWidth()];
         setRangedRawMatrixFromFullMatrix(matrix);
+        this.emptyPixelAvg = getAverageInArea();
     }
 
+    //missing emptyPixelAvg update, not good!(?)
     public void updateValues(Color[][] mat) {
         this.rangedRawMatrix = new Color[(int)rect.getHeight()][(int)rect.getWidth()];
         setRangedRawMatrixFromFullMatrix(mat);
@@ -93,6 +95,13 @@ public class Hole {
         g /=numOfPixels;
         b /=numOfPixels;
 
+//        if((this.row.equals("14")) && (this.col.equals("J"))) {
+//            System.out.println("14J: " + r + " " + g + " " + b + " greyScale: " + getGreyScale(new Color(r,g,b)));
+//        }
+//        if((this.row.equals("17")) && (this.col.equals("R+"))) {
+//            System.out.println("17R+: " + r + " " + g + " " + b + " greyScale: " + getGreyScale(new Color(r,g,b)));
+//        }
+
         return new Color(r,g,b);
     }
 
@@ -106,12 +115,31 @@ public class Hole {
         setRangedRawMatrixFromFullMatrix(matrix);
         Color currentPixelAvg = getAverageInArea();
 
+//        if(!Utils.equalsInRange(currentPixelAvg, emptyPixelAvg, HOLE_EMPTY_NOT_SENSITIVITY)) {
+//            state = true;
+//            System.out.println("ding! hole state changed for: " + this.col + this.row);
+//        }
         if(!Utils.equalsInRange(currentPixelAvg, emptyPixelAvg, HOLE_EMPTY_NOT_SENSITIVITY)) {
             state = true;
+            System.out.println("ding! hole state changed for: " + this.col + this.row);
         }
         else {
             state = false;
         }
+        return state;
+    }
+
+    private double getGreyScale (Color c) {
+        return (c.getRed() + c.getGreen() + c.getBlue()) / 3;
+    }
+
+    private boolean changeInColor(Color currentPixelAvg, Color emptyPixelAvg, int sensitivity) {
+        double greyScale1 = getGreyScale(currentPixelAvg);
+        double greyScale2 = getGreyScale(emptyPixelAvg);
+        if(Math.abs(greyScale1 - greyScale2) > sensitivity) {
+            return true;
+        }
+
         return false;
     }
 

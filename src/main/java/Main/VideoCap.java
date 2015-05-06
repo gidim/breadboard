@@ -8,6 +8,7 @@ import java.io.File;
 
 import Tutorial.LED;
 import org.opencv.core.Core;
+import org.opencv.core.Mat;
 import org.opencv.highgui.VideoCapture;
 
 public class VideoCap {
@@ -21,11 +22,20 @@ public class VideoCap {
 
     VideoCap(){
         cap = new VideoCapture();
-        cap.open(0);
+        cap.open(1);
     }
 
-    BufferedImage getOneFrame() {
+    Mat getOneMirrorMat() {
         cap.read(mat2Img.mat);
-        return mat2Img.getImage(mat2Img.mat);
+        Mat tempMat = new Mat(mat2Img.mat.rows(), mat2Img.mat.cols(), mat2Img.mat.type());
+        Core.flip(mat2Img.mat, tempMat, 1); //1 is mirror flipcode
+        return tempMat;
+    }
+
+    BufferedImage getOneMirrorFrame() {
+        cap.read(mat2Img.mat);
+        Mat tempMat = new Mat(mat2Img.mat.rows(), mat2Img.mat.cols(), mat2Img.mat.type());
+        Core.flip(mat2Img.mat, tempMat, 1); //1 is mirror flipcode
+        return mat2Img.getImage(tempMat);
     }
 }

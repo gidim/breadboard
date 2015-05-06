@@ -6,10 +6,7 @@ package Main;
 
 import Tutorial.*;
 import Tutorial.LED;
-import org.opencv.core.CvType;
-import org.opencv.core.Mat;
-import org.opencv.highgui.Highgui;
-import org.opencv.imgproc.Imgproc;
+
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -23,6 +20,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 public class MyFrame extends JFrame {
+    private static boolean click = false;
     private JPanel contentPane;
     private List<Point2D> pointsToDraw = new ArrayList<Point2D>();
     private ArrayList<Rectangle2D> rectanglesToDraw = new ArrayList<Rectangle2D>();
@@ -56,7 +54,7 @@ public class MyFrame extends JFrame {
         Circuit circuit = new Circuit();
         //step 1
         Step step1 = new Step();
-        Wire wire1 = new Wire("j","14", "Left Blue","17","Yellow");
+        Wire wire1 = new Wire("J","14", "R+","17","Yellow");
         step1.setPart(wire1);
         //step 2
         Wire wire2 = new Wire("J","13", "J","9","Green");
@@ -88,11 +86,25 @@ public class MyFrame extends JFrame {
             //Prompt User
             System.out.printf(step.getInstruction()); //todo: fix getInstruction
             //Wait till user finishes
-            BreadBoard.getInstance().blockTillDone();
+            //BreadBoard.getInstance().blockTillDone();
             //verify that the part is in the right place
+
+            //temp: stop until click refreshes holes
+            System.out.println("entering click loop");
+            while(!MyFrame.click) {
+                Thread.sleep(1);
+            }
+            System.out.println("exited click loop");
+            MyFrame.click = false;
+
             while(!step.isValid()){
+                click = false;
                 System.out.println("Try Again");
                 System.out.printf(step.getInstruction());
+                while(!click) {
+                    Thread.sleep(1);
+                }
+                click = false;
             }
             System.out.println("Step completed!");
         }
@@ -115,9 +127,16 @@ public class MyFrame extends JFrame {
         this.getContentPane().addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                System.out.println("Click!" + e);
 
-            bb.getHoleMatrix();
+                BreadBoard.getInstance().refreshHolesState(videoCap.getOneMirrorMat());
+                Hole h = BreadBoard.getInstance().getHole(new Point.Double(e.getX() - 3, e.getY() + 18));
+                if(h != null) {
+                    System.out.println("Clicked on " + h.getCol() + h.getRow());
+                }
+                else {
+                    System.out.println("Click! Not on hole");
+                }
+                MyFrame.click = true;
             }
         });
 
@@ -140,14 +159,14 @@ public class MyFrame extends JFrame {
     VideoCap videoCap = new VideoCap();
 
     public void paint(Graphics ga){
-        BufferedImage image =videoCap.getOneFrame(); // get frame from camera
+        BufferedImage image = videoCap.getOneMirrorFrame(); // get frame from camera
         Graphics2D g = image.createGraphics();
 
         //draw very important parallel line
         drawParallelLine(g,image);
 
         //update breadboard with the new data
-        bb.refresh(videoCap.mat2Img.getMat());
+        bb.refresh(videoCap.getOneMirrorMat());
 
         //get new data to draw from updated breadboard
         rectanglesToDraw = new ArrayList<Rectangle2D>(bb.getRects());

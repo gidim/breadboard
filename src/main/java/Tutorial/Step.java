@@ -30,8 +30,10 @@ public class Step {
         Hole to = BreadBoard.getInstance().getHole(part.toCol,part.toRow);
 
         if(part instanceof Wire) { // just check if the holes are in use
-            if (from.isInUse() && to.isInUse())//todo: check if isInUse is working with state
+            if (from.isInUse() && to.isInUse()) { //todo: check if isInUse is working with state
+                System.out.println("wire in right position!");
                 return true;
+            }
         }
         if(part instanceof LED){ //todo: replace Sift with RGB and fix it
             //generate a lookup area the size of the two LED holes

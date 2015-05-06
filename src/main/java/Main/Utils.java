@@ -62,6 +62,7 @@ public class Utils {
         return false;
     }
 
+
     public static boolean equalsInRange(Color c1, Color c2, double sensitivity) {
 
         if(isEqualInRange(c1.getRed(),c2.getRed(),sensitivity) &&
@@ -76,7 +77,7 @@ public class Utils {
 
 
     public static boolean isHueEqualsInRage(float[] c1, float[] c2, int colorSensitivty) {
-        if(isEqualInRange(c1[0],c2[0],colorSensitivty))
+        if(isEqualInRange(c1[0], c2[0], colorSensitivty))
             return true;
         return false;
     }
