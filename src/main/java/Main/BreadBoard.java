@@ -38,7 +38,7 @@ public class BreadBoard {
     private static final double SAME_COL_RECTS_THRESH = 7;
     public static final int HAND_IN_FRAME_SENSITIVITY = 20;
     private static final double SAME_ROW_RECTS_THRESH = 12;
-    private static final int NUMBER_OF_RECTS_CALC = 4;
+    private static final int NUMBER_OF_RECTS_CALC = 2;
 
 
     /** Singleton */
@@ -106,6 +106,7 @@ public class BreadBoard {
     }
 
     public BreadBoard(BufferedImage image, File f) {
+        this.singleton = this;
         bImage = image;
         rawMatrix = imageToMatrix(bImage);
         rawWidth = rawMatrix[0].length;
@@ -115,7 +116,7 @@ public class BreadBoard {
         rawMatrixSmoothed = imageToMatrix(tmpBImage);
         boundingBox = getBoundingBox();
         holeMatrix = getHoleMatrix();
-        this.singleton = this;
+
 
     }
 
@@ -130,13 +131,31 @@ public class BreadBoard {
         rawHeight = rawMatrix.length;
         boundingBox = getBoundingBox();
 
+
         //make sure we only add new rects for a limited number of times
         if(numOfRectsCal < NUMBER_OF_RECTS_CALC) {
             updateRects();
             numOfRectsCal++;
         }
-        else{
+        else if(numOfRectsCal == NUMBER_OF_RECTS_CALC) {
+            this.holeMatrix = getHoleMatrix();
+            drawHoleMat(holeMatrix);
             ready = true;
+            numOfRectsCal++;
+        }
+        else if(numOfRectsCal > NUMBER_OF_RECTS_CALC)
+            refreshHolesData(rawMatrix);
+
+    }
+
+    private void refreshHolesData(Color [][] mat) {
+        for(int y = 0 ; y < holeMatrix.length ; y++){
+            for(int x = 0 ; x < holeMatrix[0].length ; x++) {
+                Hole h = holeMatrix[y][x];
+                if(h!=null && h.getRect() != null)
+                    h.updateValues(mat);
+            }
+
         }
     }
 
@@ -184,27 +203,32 @@ public class BreadBoard {
      */
     public Hole[][] getHoleMatrix() {
         Hole[][] mat = initHoleMatrix();
-        getHoleRects();
-//        ArrayList<LinkedList<Rectangle2D>> rectLines = getHoleRects(holeLocations);
-//        int i = 0;
-//        for(LinkedList<Rectangle2D> rectLine : rectLines) {
-//            int startPoint = 0;
-//            if ((((i - 1) % 6) == 0) || (i == 0) || (i == NUM_OF_ROWS - 1)) {
-//                startPoint = (NUM_OF_COLS - NUM_OF_COLS_LESS) / 2;
-//            }
-//            int j = startPoint;
-//            int j = 0;
-//            for(Rectangle2D rect: rectLine) {
-//                if(mat[i][j] != null) {
-//                    mat[i][j].setRect(rect);
-//                }
-//                j++;
-//            }
-//            i++;
-//        }
-        //minHoleLocations = eliminateFalseHoles(holeLocations, averageDistance);
 
-        //drawHoleMat(mat);
+        //rects = ContourFinder.getHolesFromImage(imageAsMat); //attempt
+
+        ArrayList<LinkedList<Rectangle2D>> rectLines = partitionRectsToLines(rects);
+        //fillMissingRects(rectLines); //attempt
+//
+        int i = 0;
+        for(LinkedList<Rectangle2D> rectLine : rectLines) {
+            int startPoint = 0;
+            if ((((i - 1) % 6) == 0) || (i == 0) || (i == NUM_OF_ROWS - 1)) {
+                startPoint = (NUM_OF_COLS - NUM_OF_COLS_LESS) / 2;
+            }
+            int j = startPoint;
+            for(Rectangle2D rect: rectLine) {
+                if((i < mat.length) && (j < mat[0].length)) {
+                    if (mat[i][j] != null) {
+                        mat[i][j].updateValues(rect,rawMatrix);
+                    }
+                    j++;
+                }
+            }
+            i++;
+        }
+
+
+        drawHoleMat(mat);
 
         return mat;
     }
@@ -236,6 +260,9 @@ public class BreadBoard {
             for(int j = 0; j < startPoint; j++) {
                 //fill left side of off lines with null
                 mat[i][j] = null;
+            }
+            for(int j = 0; j < colNum; j++) {
+                mat[i][j + startPoint] = new Hole(i, j);
             }
             for(int j = startPoint + colNum; j < NUM_OF_COLS; j++) {
                 //fill right side of off lines with null
@@ -292,12 +319,8 @@ public class BreadBoard {
 
     private ArrayList<LinkedList<Rectangle2D>> getHoleRects() {
 
-
-        //rects = eliminateFalseRects(rects);
         //drawRectList(rects, "imagenew2.jpg");
-
-
-        //ArrayList<LinkedList<Rectangle2D>> rectLines = partitionRectsToLines(rects);
+        ArrayList<LinkedList<Rectangle2D>> rectLines = partitionRectsToLines(rects);
         //drawRectLineListAndBoundingBox(rectLines, this.boundingBox);
 
         //fillMissingRects(rectLines); //mutates rectLines
@@ -333,14 +356,14 @@ public class BreadBoard {
                         int rectJ = startPoint + j;
                         if (j >= currLine.size()) {
                             //rect missing at the end of the line, just add
-                            Rectangle2D missingRect = new Rectangle2D.Double(currLine.getFirst().getMinX(), relativeDesiredRectYCoords[j], currLine.getFirst().getWidth(), currLine.getFirst().getHeight());
+                            Rectangle2D missingRect = new Rectangle2D.Double(currLine.getFirst().getMinX(), relativeDesiredRectYCoords[rectJ], currLine.getFirst().getWidth(), currLine.getFirst().getHeight());
                             currLine.addLast(missingRect);
                         } else {
                             //check if missing rects in the middle/beginning
-                            Rectangle2D currRect = currLine.get(rectJ);
+                            Rectangle2D currRect = currLine.get(j);
                             if (!rectInSameColAsPoint(currRect, relativeDesiredRectYCoords[j])) {
-                                Rectangle2D missingRect = new Rectangle2D.Double(currRect.getMinX(), relativeDesiredRectYCoords[j], currRect.getWidth(), currRect.getHeight());
-                                currLine.add(rectJ, missingRect);
+                                Rectangle2D missingRect = new Rectangle2D.Double(currRect.getMinX(), relativeDesiredRectYCoords[rectJ], currRect.getWidth(), currRect.getHeight());
+                                currLine.add(j, missingRect);
                             }
                         }
                     }
@@ -419,6 +442,7 @@ public class BreadBoard {
 
 
     private ArrayList<LinkedList<Rectangle2D>> partitionRectsToLines(LinkedList<Rectangle2D> rects) {
+
         ArrayList<LinkedList<Rectangle2D>> rectLines = new ArrayList<LinkedList<Rectangle2D>>();
 
         //sort large list of rects by ascending y to partition into lines
@@ -471,7 +495,8 @@ public class BreadBoard {
             rectLines.add(currLine);
         }
 
-        System.out.println(rectLines.size());
+        //drawRectLineListAndBoundingBox(rectLines, this.boundingBox);
+        System.out.println("partitioned into " + rectLines.size() + " lines");
         return rectLines;
     }
 
@@ -927,7 +952,12 @@ public class BreadBoard {
         for(int i = 0; i < NUM_OF_ROWS; i++) {
             for (int j = 0; j < NUM_OF_COLS; j++) {
                 if(mat[i][j] != null) {
-                    g2d.drawRect((int)mat[i][j].getRect().getMinX(), (int) mat[i][j].getRect().getMinY(), (int) mat[i][j].getRect().getWidth(), (int) mat[i][j].getRect().getHeight());
+                    if(mat[i][j].getRect() == null) {
+                        System.out.println("false negative?");
+                    }
+                    else {
+                        g2d.drawRect((int) mat[i][j].getRect().getMinX(), (int) mat[i][j].getRect().getMinY(), (int) mat[i][j].getRect().getWidth(), (int) mat[i][j].getRect().getHeight());
+                    }
                 }
             }
         }
@@ -1232,11 +1262,15 @@ public class BreadBoard {
                 e.printStackTrace();
             }
             double newAvg = calculateAllHolesAverage(); // realtime sample
-            if(!Utils.isEqualInRange(completeHolesAverage,newAvg,HAND_IN_FRAME_SENSITIVITY)) // something changed!
+            if(!Utils.isEqualInRange(completeHolesAverage,newAvg,HAND_IN_FRAME_SENSITIVITY)) { // something changed!
                 handWasIn = true;
+                System.out.println("HAND !");
+            }
             else{ //same as normal
-                if(handWasIn)
+                if(handWasIn) {
+                    System.out.println("HAND is OUT!");
                     return;
+                }
             }
         }
     }
@@ -1247,11 +1281,16 @@ public class BreadBoard {
 
         for (int i = 0; i < holeMatrix.length; i++) {
             for (int j = 0; j < holeMatrix[0].length; j++) {
-                Color singleAvg = holeMatrix[i][j].getAverageInArea();
-                int red = singleAvg.getRed();
-                int green = singleAvg.getGreen();
-                int blue = singleAvg.getBlue();
-                avg += ((red + green + blue) / 3);
+                if(holeMatrix[i][j]!=null) {
+                    Color singleAvg = holeMatrix[i][j].getAverageInArea();
+                    if(singleAvg == null)
+                        continue;
+
+                    int red = singleAvg.getRed();
+                    int green = singleAvg.getGreen();
+                    int blue = singleAvg.getBlue();
+                    avg += ((red + green + blue) / 3);
+                }
             }
         }
 

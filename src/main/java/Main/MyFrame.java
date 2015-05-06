@@ -28,6 +28,8 @@ public class MyFrame extends JFrame {
     private ArrayList<Rectangle2D> rectanglesToDraw = new ArrayList<Rectangle2D>();
     private BreadBoard bb;
 
+    int counter = 0;
+
     /**
      * Launch the application.
      */
@@ -178,7 +180,6 @@ public class MyFrame extends JFrame {
         int parallelLineY2 = parallelLineY1 * 3;
         g.drawLine(parallelLineX1, parallelLineY1, parallelLineX2, parallelLineY1);
         g.drawLine(parallelLineX1, parallelLineY1, parallelLineX1, parallelLineY2);
-
     }
 
     class MyThread extends Thread{

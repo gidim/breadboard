@@ -31,13 +31,24 @@ public class Hole {
         this.col = number;
     }
 
-    //todo: since constructor is never called, find where to initialize values
     public Hole(int rowNum, int colNum,Rectangle2D rect, Color[][] matrix) {
         this(rowNum,colNum);
         this.rect = rect;
         setRangedRawMatrixFromFullMatrix(matrix);
-        this.emptyPixelAvg = getAverageInArea();
+
     }
+
+    public void updateValues(Rectangle2D rect, Color[][] matrix){
+        this.rect = rect;
+        this.rangedRawMatrix = new Color[(int)rect.getHeight()][(int)rect.getWidth()];
+        setRangedRawMatrixFromFullMatrix(matrix);
+    }
+
+    public void updateValues(Color[][] mat) {
+        this.rangedRawMatrix = new Color[(int)rect.getHeight()][(int)rect.getWidth()];
+        setRangedRawMatrixFromFullMatrix(mat);
+    }
+
 
 
     /**
@@ -46,10 +57,11 @@ public class Hole {
      */
     private void setRangedRawMatrixFromFullMatrix(Color[][] matrix) {
         int r = 0;
-        int c = 0;
-        for (int y = (int) rect.getMinY(); y < rect.getMaxY(); y++) {
-            for (int x = (int) rect.getMinX(); x < rect.getMaxX(); x++) {
-                rangedRawMatrix[r++][c++] = matrix[y][x];
+        for (int y = (int) rect.getMinY(); y < (int)rect.getMaxY(); y++ , r++) {
+            int c = 0;
+            for (int x = (int) rect.getMinX(); x < (int)rect.getMaxX(); x++, c++) {
+                if(matrix[y][x] != null)
+                    rangedRawMatrix[r][c] = matrix[y][x];
             }
         }
     }
@@ -61,15 +73,20 @@ public class Hole {
      */
     public Color getAverageInArea() {
 
+        if(this.rect == null)
+            return null;
+
         int r = 0;
         int g = 0;
         int b = 0;
 
-        for (int y = (int) rect.getMinY(); y < rect.getMaxY(); y++) {
-            for (int x = (int) rect.getMinX(); x < rect.getMaxX(); x++) {
-                r += rangedRawMatrix[y][x].getRed();
-                g += rangedRawMatrix[y][x].getGreen();
-                b += rangedRawMatrix[y][x].getBlue();
+        for (int y = 0; y < (int) rect.getHeight(); y++) {
+            for (int x = 0; x < (int)rect.getWidth(); x++) {
+                if(rangedRawMatrix[y][x] !=null) {
+                    r += rangedRawMatrix[y][x].getRed();
+                    g += rangedRawMatrix[y][x].getGreen();
+                    b += rangedRawMatrix[y][x].getBlue();
+                }
             }
         }
 
@@ -158,6 +175,7 @@ public class Hole {
     public void setRect(Rectangle2D rect) {
         this.rect = rect;
     }
+
 
 
 }
