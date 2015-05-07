@@ -21,6 +21,7 @@ public class Step {
     Part part;
     ArrayList<Hole> holes;
     private int stepIdx;
+    private volatile boolean bypas;
 
     public Step() {
         this.stepIdx = -1;
@@ -79,6 +80,9 @@ public class Step {
     }
 
     public boolean isValid(){
+        if(bypas)
+            return true;
+
         Hole from = BreadBoard.getInstance().getHole(part.fromCol,part.fromRow);
         Hole to = BreadBoard.getInstance().getHole(part.toCol,part.toRow);
 
@@ -100,7 +104,7 @@ public class Step {
             int height = maxy - miny;
 
             Rectangle2D.Double rec = new Rectangle2D.Double(x,y,width,height);
-            Rectangle2D.Double biggerRec = Utils.grow(rec,1.2,1.1);
+            Rectangle2D.Double biggerRec = Utils.grow(rec,1.2,0.8);
 
             BufferedImage cropped = BreadBoard.getInstance().getBufferedImage();
             cropped = Utils.cropImage(cropped,biggerRec);
@@ -111,7 +115,7 @@ public class Step {
             if(wirePoints.size() == 2) {
                 Point2D p1 = new Point2D.Double(wirePoints.get(0).getX() + biggerRec.getMinX(), wirePoints.get(0).getY() + biggerRec.getMinY());
                 Point2D p2 = new Point2D.Double(wirePoints.get(1).getX() + biggerRec.getMinX(), wirePoints.get(1).getY() + biggerRec.getMinY());
-                Rectangle2D fromRect = Utils.grow(from.getRect(), 0.5, 0.5);
+                Rectangle2D fromRect = Utils.grow(from.getRect(), 0.5, 0.5); //todo: add more to width than to height
                 Rectangle2D toRect = Utils.grow(to.getRect(), 0.5, 0.5);
 
                 if((fromRect.contains(p1) && toRect.contains(p2)) || ((fromRect.contains(p2) && (toRect.contains(p1))))) {
@@ -170,7 +174,7 @@ public class Step {
 
             }
         }
-        if(part instanceof Switch) { //todo: add a check for switch
+        if(part instanceof Switch) { //todo: improve switch check
             if(checkSwitchBoundingBox(from, to)) {
                 System.out.println("switch in right position!");
                 return true;
@@ -255,5 +259,14 @@ public class Step {
         strArr[4] = ".";
 
         return strArr;
+    }
+
+
+    public void setBypas(boolean bypas) {
+        this.bypas = bypas;
+    }
+
+    public boolean isBypas() {
+        return bypas;
     }
 }

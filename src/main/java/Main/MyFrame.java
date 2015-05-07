@@ -9,6 +9,8 @@ import Tutorial.LED;
 import org.opencv.core.Mat;
 import org.opencv.core.Rect;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
@@ -66,7 +68,46 @@ public class MyFrame extends JFrame {
         //CONFIGURE TUTORIAL
         Circuit circuit = new Circuit();
         //step 1
+        Step step1 = new Step(1);
+        Wire wire1 = new Wire("I","3", "R+","3","Yellow");
+        //Wire wire1 = new Wire("L+","60", "A","60","Yellow");
+        step1.setPart(wire1);
+        //step 2
+        Wire wire2 = new Wire("J","9", "J","13","Yellow");
+        //Wire wire2 = new Wire("B","52", "C","56","Yellow");
+        Step step2 = new Step(2);
+        step2.setPart(wire2);
 
+        Step step3 = new Step(3);
+        Wire wire3 = new Wire("J","16","R-","16","Yellow");
+        step3.setPart(wire3);
+
+        Step step4 = new Step(4);
+        Wire wire4 = new Wire("E","6","F","6","Yellow");
+        step4.setPart(wire4);
+
+        Step step5 = new Step(5);
+        Wire wire5 = new Wire("E","9","G","9","Yellow");
+        step5.setPart(wire5);
+
+
+        //step 3
+        LED led = new LED("I","13","I","16");
+        Step step6 = new Step(6);
+        step6.setPart(led);
+        //step 4
+
+        Resistor res = new Resistor("G","3","G","6", "Yellow Purple Red Gold");
+        Step step7 = new Step(7);
+        step7.setPart(res);
+
+
+        //step 5
+        Switch sw = new Switch("A","6","D","9");
+        Step step8 = new Step(8);
+        step8.setPart(sw);
+
+        /*
         Step step1 = new Step(1);
         Wire wire1 = new Wire("J","16", "R-","16","Yellow");
         //Wire wire1 = new Wire("L+","60", "A","60","Yellow");
@@ -89,14 +130,16 @@ public class MyFrame extends JFrame {
         Switch sw = new Switch("F","6","I","9");
         Step step5 = new Step(5);
         step5.setPart(sw);
-
+        */
 
         circuit.addStep(step1);
         circuit.addStep(step2);
         circuit.addStep(step3);
-
         circuit.addStep(step4);
         circuit.addStep(step5);
+        circuit.addStep(step6);
+        circuit.addStep(step7);
+        circuit.addStep(step8);
 
         //circut/Tutorial is in the system
 
@@ -116,9 +159,6 @@ public class MyFrame extends JFrame {
             }
             System.out.println("exited click loop");
             MyFrame.click = false;
-
-
-            instruct(Messages.stepCompleteMessage());
 
 
             while(!step.isValid()){
@@ -160,7 +200,6 @@ public class MyFrame extends JFrame {
     }
 
 
-
     /**
      * Create the frame.
      */
@@ -174,6 +213,27 @@ public class MyFrame extends JFrame {
         contentPane.setLayout(null);
         pointsToDraw = new ArrayList<Point2D>();
 
+
+
+        //todo: add keyboard listener that allows user to skip step
+
+        this.addKeyListener(new KeyListener() {
+
+            @Override
+            public void keyTyped(KeyEvent e) {
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                currentStep.setBypas(true);
+                click = true;
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                System.out.println("Pressed " + e.getKeyChar());
+            }
+        });
 
         this.getContentPane().addMouseListener(new MouseAdapter() {
             @Override

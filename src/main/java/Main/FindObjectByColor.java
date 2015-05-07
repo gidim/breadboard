@@ -83,7 +83,7 @@ public class FindObjectByColor {
         // cvScalar : ( H , S , V, A)
         cvInRangeS(imgHSV, cvScalar(hueLowerR, 50, 50, 0), cvScalar(hueUpperR, 255, 255, 0), imgThreshold);
         cvReleaseImage(imgHSV);
-        cvSmooth(imgThreshold, imgThreshold, CV_MEDIAN, 13);
+        cvSmooth(imgThreshold, imgThreshold, CV_MEDIAN, 5);
         // save
         return imgThreshold;
     }
@@ -120,35 +120,68 @@ public class FindObjectByColor {
 
         int topX=-1, bottomX=Integer.MAX_VALUE, bottomY=-1, topY=-1;
 
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                int Index =  y * thresholdImage.widthStep() + x* thresholdImage.nChannels();
-                int value = ImageBuffer.get(Index) & 0xFF;
-                //if (Utils.equalsInRange(Color.white, Utils.encodedRGBtoColor(image.getRGB(x, y)), FOREGROUND_BG_SENSITIVITY)) {
-                if(value == 255) {
-                    points.add(new Point2D.Double(x, y));
+        if(height > width) {
+
+            for (int y = 0; y < height; y++) {
+                for (int x = 0; x < width; x++) {
+                    int Index = y * thresholdImage.widthStep() + x * thresholdImage.nChannels();
+                    int value = ImageBuffer.get(Index) & 0xFF;
+                    //if (Utils.equalsInRange(Color.white, Utils.encodedRGBtoColor(image.getRGB(x, y)), FOREGROUND_BG_SENSITIVITY)) {
+                    if (value == 255) {
+                        points.add(new Point2D.Double(x, y));
+                        break;
+                    }
+                }
+                if (points.size() > 0) {
                     break;
                 }
             }
-            if(points.size() > 0) {
-                break;
+
+            for (int y = height - 1; y >= 0; y--) {
+                for (int x = 0; x < width; x++) {
+                    if (Utils.equalsInRange(Color.white, Utils.encodedRGBtoColor(image.getRGB(x, y)), FOREGROUND_BG_SENSITIVITY)) {
+                        points.add(new Point2D.Double(x, y));
+                        break;
+                    }
+                }
+                if (points.size() > 1) {
+                    break;
+                }
             }
         }
 
-        for (int y = height - 1; y >= 0; y--) {
+        else{  //width > height
             for (int x = 0; x < width; x++) {
-                if (Utils.equalsInRange(Color.white, Utils.encodedRGBtoColor(image.getRGB(x, y)), FOREGROUND_BG_SENSITIVITY)) {
-                    points.add(new Point2D.Double(x, y));
+                for (int y = 0; y < height; y++) {
+                    int Index = y * thresholdImage.widthStep() + x * thresholdImage.nChannels();
+                    int value = ImageBuffer.get(Index) & 0xFF;
+                    //if (Utils.equalsInRange(Color.white, Utils.encodedRGBtoColor(image.getRGB(x, y)), FOREGROUND_BG_SENSITIVITY)) {
+                    if (value == 255) {
+                        points.add(new Point2D.Double(x, y));
+                        break;
+                    }
+                }
+                if (points.size() > 0) {
                     break;
                 }
             }
-            if(points.size() > 1) {
-                break;
+
+            for (int x = width - 1; x >= 0; x--) {
+                for (int y = 0; y < height; y++) {
+                    if (Utils.equalsInRange(Color.white, Utils.encodedRGBtoColor(image.getRGB(x, y)), FOREGROUND_BG_SENSITIVITY)) {
+                        points.add(new Point2D.Double(x, y));
+                        break;
+                    }
+                }
+                if (points.size() > 1) {
+                    break;
+                }
             }
         }
 
         return points;
+
     }
 
+    }
 
-}
