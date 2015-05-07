@@ -3,10 +3,11 @@ package Main;
 /**
  * Created by Gideon on 5/2/15.
  */
-
+import com.google.common.collect.MinMaxPriorityQueue;
 import Tutorial.*;
 import Tutorial.LED;
-
+import org.opencv.core.Mat;
+import org.opencv.core.Rect;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -24,6 +25,15 @@ public class MyFrame extends JFrame {
     private JPanel contentPane;
     private List<Point2D> pointsToDraw = new ArrayList<Point2D>();
     private ArrayList<Rectangle2D> rectanglesToDraw = new ArrayList<Rectangle2D>();
+    private static ArrayList<String> stringsToDraw = new ArrayList<String>();
+    public volatile boolean findAResistor = false;
+    public volatile ArrayList<Rectangle2D.Double> resistors = null;
+    public volatile Rectangle2D.Double resistor = null;
+    private static int numOfIter = 0;
+    MinMaxPriorityQueue<RectangleMatch> matches =
+            MinMaxPriorityQueue.maximumSize(3000).create();
+    private static MyFrame instance;
+
     //private ArrayList<String> stringsToDraw = new ArrayList<String>();
     private BreadBoard bb;
     private volatile static String currentInstruction;
@@ -80,10 +90,12 @@ public class MyFrame extends JFrame {
         Step step5 = new Step(5);
         step5.setPart(sw);
 
+
         circuit.addStep(step1);
         circuit.addStep(step2);
         circuit.addStep(step3);
-//        circuit.addStep(step4);
+
+        circuit.addStep(step4);
         circuit.addStep(step5);
 
         //circut/Tutorial is in the system
@@ -91,11 +103,6 @@ public class MyFrame extends JFrame {
         //now iterate over each step, prompt the user, wait till he finishes, verify and continue
         for(Step step : circuit.getSteps()){
             //Prompt User
-//            currentStep = step;
-//            currentInstruction = step.getInstruction();
-//            System.out.printf(currentInstruction);
-//            Utils.speak(step.getVocalInstruction());
-
             instruct(step);
 
             //Wait till user finishes
@@ -110,27 +117,22 @@ public class MyFrame extends JFrame {
             System.out.println("exited click loop");
             MyFrame.click = false;
 
-            //temp:
+
             instruct(Messages.stepCompleteMessage());
 
 
-//            currentInstruction = Messages.stepCompleteMessage();
-//            Utils.speak(Messages.stepCompleteMessage());
-//            Thread.sleep(5);
+            while(!step.isValid()){
+                click = false;
+                instruct(Messages.stepFailedMessage()); //say/draw failed
 
+                instruct(step);
 
-//            while(!step.isValid()){
-//                click = false;
-//                instruct(Messages.stepFailedMessage()); //say/draw failed
-//
-//                instruct(step);
-//
-//                while(!click) {
-//                    Thread.sleep(1);
-//                }
-//                click = false;
-//            }
-//            instruct(Utils.stepCompleteMessage());
+                while(!click) {
+                    Thread.sleep(1);
+                }
+                click = false;
+            }
+            instruct(Messages.stepCompleteMessage());
         }
         currentInstruction = null;
         currentStep = null;
@@ -163,6 +165,7 @@ public class MyFrame extends JFrame {
      * Create the frame.
      */
     public MyFrame() {
+        this.instance = this;
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 1280, 960);
         contentPane = new JPanel();
@@ -229,6 +232,11 @@ public class MyFrame extends JFrame {
         for(Rectangle2D rec : rectanglesToDraw)
             g.drawRect((int) rec.getX(), (int) rec.getY(),(int)rec.getWidth(),(int)rec.getHeight());
 
+        //draw resistor
+        if(resistor !=null)
+            g.drawRect((int) resistor.getX(), (int) resistor.getY(), (int) resistor.getWidth(), (int) resistor.getHeight());
+
+
         //draw step graphics
         if(currentStep != null) {
             g.setColor(stepHoleIndicatorColor);
@@ -289,6 +297,39 @@ public class MyFrame extends JFrame {
             g.drawString(Messages.noMoreStepsMessage(), stringPosX, stringPosY);
         }
 
+        if(findAResistor){
+            Mat retMat = null;
+            //run 30 times
+            if(numOfIter < 25) {
+                retMat = ContourFinder.getComponentContours(videoCap.getOneMirrorMat(), matches);
+                numOfIter ++;
+            }
+
+            if(numOfIter == 25) {
+                int maxCount = matches.peekFirst().count;
+                resistors = new ArrayList<Rectangle2D.Double>();
+/*
+                while(matches.peekFirst().count == maxCount){
+                    resistors.add(matches.removeFirst().rect);
+                }
+  */
+                for(RectangleMatch m : matches){
+                    if(m.count == maxCount)
+                        resistors.add(m.rect);
+                }
+                System.out.println();
+            }
+            if(resistors != null) {
+                //g.setColor(Color.white);
+                //g.drawRect((int) resistor.getX(), (int) resistor.getY(), (int) resistor.getWidth(), (int) resistor.getHeight());
+                //Utils.saveBufferedImage(image,"withRes");
+                findAResistor = false;
+                numOfIter = 0;
+                //Core.rectangle(retMat, new org.opencv.core.Point(resistor.x, resistor.y), new org.opencv.core.Point(resistor.x + resistor.width, resistor.y + resistor.height), new Scalar(255, 255, 255));
+            }
+        }
+
+
         //finalize and draw
         g.finalize();
         g.dispose();
@@ -314,5 +355,9 @@ public class MyFrame extends JFrame {
                 } catch (InterruptedException e) {    }
             }
         }
+    }
+
+    public static MyFrame getInstance(){
+        return instance;
     }
 }
