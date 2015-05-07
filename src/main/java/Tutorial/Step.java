@@ -1,6 +1,7 @@
 package Tutorial;
 
 import Main.BreadBoard;
+import Main.MyFrame;
 import Main.Utils;
 
 import org.opencv.core.Mat;
@@ -72,13 +73,10 @@ public class Step {
                     return true;
                 }
                 else {
-                    //todo: probably p1 and p2 not from and to
+                    //todo: tell user that he's in the wrong hole, probably p1 and p2 not from and to
                     return false;
                 }
             }
-
-
-
         }
         if(part instanceof LED){
             //generate a lookup area the size of the two LED holes
@@ -98,39 +96,35 @@ public class Step {
             if(LED.searchInAreaHSB(cropped) != null)
                 return true;
         }
-        if(part instanceof Resistor)//todo: check holes AND use resistor detector
-            System.out.println();
+
         if(part instanceof Resistor) {//todo: check holes AND use resistor detector
-            return true;
-            /*
-            //draw a lookup box
-            int x = (int)from.getRect().getX();
-            int y = (int)from.getRect().getY();
-            int width = (int) (to.getRect().getWidth());
-            int height = (int) ((int) to.getRect().getMaxY() - from.getRect().getY());
-            Rectangle2D.Double rec = new Rectangle2D.Double(x,y,width,height);
-            Rectangle2D.Double biggerRec = Utils.grow(rec,4,1.5);
+            MyFrame.getInstance().findAResistor = true;
 
-            //test if the right resistor is in it
+            while(MyFrame.getInstance().findAResistor == true){ //wait for it
+                try {
+                    Thread.sleep(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
 
-            //crop the image so it will only fit the rectangle
-            BufferedImage cropped = BreadBoard.getInstance().getBufferedImage();
-            cropped = Utils.cropImage(cropped,biggerRec);
-            Utils.saveBufferedImage(cropped,"cropped");
-            //transform to Mat
-            Mat croppedMat = Utils.bufferedImageToMat(cropped);
+            ArrayList<Rectangle2D.Double> resistors = MyFrame.getInstance().resistors;
+            if(resistors == null)
+                System.out.println("ERROR !!!!! resistor is null");
+            else {
+                Rectangle2D fromRect = Utils.grow(from.getRect(), 0.5, 0.5);
+                Rectangle2D toRect = Utils.grow(to.getRect(), 0.5, 0.5);
 
-            //verify color coding
-            String code  = ResistorDetector.detect(croppedMat);
+                for (Rectangle2D.Double rectToCheck : resistors) {
 
-            String shouldBe = part.getCode();
-            if((shouldBe.equals(code)))
-                return true;
+                    if ((fromRect.intersects(rectToCheck) && toRect.intersects(rectToCheck))) {
+                        MyFrame.getInstance().resistor = rectToCheck;
+                        return true;
+                    }
+                }
 
-
-        */
+            }
         }
-
         if(part instanceof Switch) { //todo: add a check for switch
             if(checkSwitchBoundingBox(from, to)) {
                 System.out.println("switch in right position!");

@@ -1,12 +1,11 @@
 package Main;
 
+import com.google.common.collect.MinMaxPriorityQueue;
 import org.opencv.core.*;
 import org.opencv.core.Point;
 import org.opencv.highgui.Highgui;
 import org.opencv.imgproc.Imgproc;
 
-import java.awt.*;
-import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.util.ArrayList;
@@ -25,6 +24,9 @@ public class ContourFinder {
     private static double lowRatioThresh;
     private static double highRatioThresh;
     private static boolean firstTime = true;
+    private static int minWidth  = 60;
+    private static int minHeight = 21;
+
 
     public static LinkedList<Rectangle2D> getHolesFromImage(Mat image){
 
@@ -72,9 +74,9 @@ public class ContourFinder {
         return recs;
     }
 
-    public static void getComponentContours(Mat image, Point2D p1, Point2D p2) {
+    public static Mat getComponentContours(Mat image, MinMaxPriorityQueue<RectangleMatch> rects) {
 
-
+        ArrayList<RectangleMatch> newRects = new ArrayList<RectangleMatch>();
 
         // Consider the image for processing
         //image = image.submat((int)p1.getY(), (int)p2.getY(), (int)p1.getX(), (int)p2.getX());
@@ -82,10 +84,65 @@ public class ContourFinder {
         Mat imageBlurr = new Mat(image.size(), Core.DEPTH_MASK_8U);
         Mat imageA = new Mat(image.size(), Core.DEPTH_MASK_ALL);
         Imgproc.cvtColor(image, imageHSV, Imgproc.COLOR_BGR2GRAY);
-        Imgproc.GaussianBlur(imageHSV, imageBlurr, new Size(1,1), 0);
-        Imgproc.adaptiveThreshold(imageBlurr, imageA, 255,Imgproc.ADAPTIVE_THRESH_MEAN_C, Imgproc.THRESH_BINARY,7, 5);
+        Imgproc.GaussianBlur(imageHSV, imageBlurr, new Size(3,3), 0);
+        Imgproc.adaptiveThreshold(imageBlurr, imageA, 255,Imgproc.ADAPTIVE_THRESH_MEAN_C, Imgproc.THRESH_BINARY,7, 1);
 
-        Highgui.imwrite("test3.png", imageBlurr);
+        //Highgui.imwrite("test3.png", imageBlurr);
+
+        List<MatOfPoint> contours = new ArrayList<MatOfPoint>();
+        Imgproc.findContours(imageA, contours, new Mat(), Imgproc.RETR_LIST,Imgproc.CHAIN_APPROX_SIMPLE);
+        //Imgproc.drawContours(imageBlurr, contours, 1, new Scalar(0,0,255));
+        for(int i=0; i< contours.size();i++){
+           System.out.println(Imgproc.contourArea(contours.get(i)));
+            Rect rect = Imgproc.boundingRect(contours.get(i));
+            Rectangle2D.Double newRect = new Rectangle2D.Double(rect.x,rect.y,rect.width,rect.height);
+            if((Utils.isEqualInRange(rect.width,minWidth,25) && (Utils.isEqualInRange(rect.height,minHeight,5))) ||
+                    (Utils.isEqualInRange(rect.height,minWidth,25) && (Utils.isEqualInRange(rect.width,minHeight,5)))){
+
+                if(!BreadBoard.getInstance().getBoundingBox().intersects(newRect))
+                    continue;
+
+                //this is a match
+                for(RectangleMatch prevRect : rects){
+                    if(prevRect.rect.intersects(newRect)){
+                        prevRect.count++;
+                        if(prevRect.rect.getHeight() * prevRect.rect.getWidth() < newRect.getHeight() * newRect.getWidth()) // older is smaller
+                            prevRect.rect = newRect;
+                    }
+                    else{//never seen a rec here
+                        newRects.add(new RectangleMatch(newRect));
+                    }
+                }
+                if(rects.size() == 0) {//first time
+                    newRects.add(new RectangleMatch(newRect));
+                }
+                    Core.rectangle(image, new Point(rect.x, rect.y), new Point(rect.x + rect.width, rect.y + rect.height), new Scalar(0, 0, 255));
+            }
+        }
+
+        rects.addAll(newRects);
+
+
+        Highgui.imwrite("test4.png",image);
+        return image;
+
+    }
+
+
+    public static Mat getComponentContours(Mat image) {
+
+        ArrayList<RectangleMatch> newRects = new ArrayList<RectangleMatch>();
+
+        // Consider the image for processing
+        //image = image.submat((int)p1.getY(), (int)p2.getY(), (int)p1.getX(), (int)p2.getX());
+        Mat imageHSV = new Mat(image.size(), Core.DEPTH_MASK_8U);
+        Mat imageBlurr = new Mat(image.size(), Core.DEPTH_MASK_8U);
+        Mat imageA = new Mat(image.size(), Core.DEPTH_MASK_ALL);
+        Imgproc.cvtColor(image, imageHSV, Imgproc.COLOR_BGR2GRAY);
+        Imgproc.GaussianBlur(imageHSV, imageBlurr, new Size(3,3), 0);
+        Imgproc.adaptiveThreshold(imageBlurr, imageA, 255,Imgproc.ADAPTIVE_THRESH_MEAN_C, Imgproc.THRESH_BINARY,7, 1);
+
+        //Highgui.imwrite("test3.png", imageBlurr);
 
         List<MatOfPoint> contours = new ArrayList<MatOfPoint>();
         Imgproc.findContours(imageA, contours, new Mat(), Imgproc.RETR_LIST,Imgproc.CHAIN_APPROX_SIMPLE);
@@ -93,21 +150,16 @@ public class ContourFinder {
         for(int i=0; i< contours.size();i++){
 ///            System.out.println(Imgproc.contourArea(contours.get(i)));
             Rect rect = Imgproc.boundingRect(contours.get(i));
-
-            if (Imgproc.contourArea(contours.get(i)) > 200){
-                //if(rect.width < 250) {
-                    //System.out.println(rect.height);
-                    //if (rect.height > 40 ){
-                    //System.out.println(rect.x +","+rect.y+","+rect.height+","+rect.width);
-                    Core.rectangle(image, new Point(rect.x, rect.y), new Point(rect.x + rect.width, rect.y + rect.height), new Scalar(0, 0, 255));
-                    //}
-                //}
+            Rectangle2D.Double newRect = new Rectangle2D.Double(rect.x,rect.y,rect.width,rect.height);
+            if((Utils.isEqualInRange(rect.width,minWidth,25) && (Utils.isEqualInRange(rect.height,minHeight,5))) ||
+                    (Utils.isEqualInRange(rect.height,minWidth,25) && (Utils.isEqualInRange(rect.width,minHeight,5)))){
+                //Core.rectangle(image, new Point(rect.x, rect.y), new Point(rect.x + rect.width, rect.y + rect.height), new Scalar(0, 0, 255));
             }
         }
         Highgui.imwrite("test4.png",image);
+        return image;
 
     }
-
     private static boolean isFalsePositive(Rectangle2D rect) {
             double currArea = rect.getWidth() * rect.getHeight();
             if((currArea > lowAreaThresh) && (currArea < highAreaThresh)) {
