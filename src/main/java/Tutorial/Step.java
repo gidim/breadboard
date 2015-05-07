@@ -19,16 +19,61 @@ public class Step {
 
     Part part;
     ArrayList<Hole> holes;
+    private int stepIdx;
 
+    public Step() {
+        this.stepIdx = -1;
+    }
+
+    public Step(int stepIdx) {
+        this.stepIdx = stepIdx;
+    }
 
     /**
      * @return a string with user instructions for this step
      */
     public String getInstruction(){
+        String stepIdxString = "";
+        if(this.stepIdx != -1) {
+            stepIdxString = "(Step " + this.stepIdx + ") ";
+        }
+        String instruction = stepIdxString + "Pickup " + part.getName() + " " + part.getDescription() + " - ";
+        instruction+= "Insert leg one to hole " + part.fromCol+part.fromRow + ", ";
+        instruction+= " Insert leg two to hole " + part.toCol+part.toRow + ".";
+        return instruction;
+    }
+
+    private String colToVocalString(String col) {
+        String vocCol = col;
+        if(col.contains("L-")) {
+            vocCol = "L minus";
+        }
+        else if(col.contains("L+")) {
+            vocCol = "L plus";
+        }
+        else if(col.contains("R-")) {
+            vocCol = "R minus";
+        }
+        else if(col.contains("R+")) {
+            vocCol = "R plus";
+        }
+
+        return vocCol;
+    }
+
+    /**
+     * @return a string with user instructions for this step
+     */
+    public String getVocalInstruction(){
+
+        String fromRow = part.fromRow;
+        String toRow = part.toRow;
+        String fromCol = colToVocalString(part.fromCol);
+        String toCol = colToVocalString(part.toCol);
 
         String instruction = "Pickup " + part.getName() + " " + part.getDescription() + " - .\n\n";
-        instruction+= "Insert leg one to hole " + part.fromCol+part.fromRow + ".\n";
-        instruction+= " Insert leg two to hole " + part.toCol+part.toRow + ".";
+        instruction+= "Insert leg one to hole " + fromCol + fromRow + ".\n";
+        instruction+= " Insert leg two to hole " + toCol + toRow + ".";
         return instruction;
     }
 
@@ -45,8 +90,8 @@ public class Step {
             int y = (int)from.getRect().getY();
             int maxx = Math.max((int)to.getRect().getMaxX(), (int)from.getRect().getMaxX());
             int maxy = Math.max((int)to.getRect().getMaxY(), (int)from.getRect().getMaxY());
-            int minx = Math.min((int)to.getRect().getMinX(), (int)from.getRect().getMinX());
-            int miny = Math.min((int)to.getRect().getMinY(), (int)from.getRect().getMinY());
+            int minx = Math.min((int) to.getRect().getMinX(), (int) from.getRect().getMinX());
+            int miny = Math.min((int) to.getRect().getMinY(), (int) from.getRect().getMinY());
 
             //int width = (int) to.getRect().getMaxX() - (int) from.getRect().getMinX();
             //int height = (int) to.getRect().getMaxY() - (int) from.getRect().getMinY();
@@ -98,8 +143,6 @@ public class Step {
             if(LED.searchInAreaHSB(cropped) != null)
                 return true;
         }
-        if(part instanceof Resistor)//todo: check holes AND use resistor detector
-            System.out.println();
         if(part instanceof Resistor) {//todo: check holes AND use resistor detector
             return true;
             /*
@@ -202,4 +245,19 @@ public class Step {
     }
 
 
+    public String[] getInstructionArr() {
+        String[] strArr = new String[5];
+
+        String stepIdxString = "";
+        if(this.stepIdx != -1) {
+            stepIdxString = "(Step " + this.stepIdx + ") ";
+        }
+        strArr[0] = stepIdxString + "Pickup " + part.getName() + " " + part.getDescription() + " - Insert leg one to hole ";
+        strArr[1] = part.fromCol+part.fromRow;
+        strArr[2] = ", insert leg two to hole ";
+        strArr[3] = part.toCol+part.toRow;
+        strArr[4] = ".";
+
+        return strArr;
+    }
 }
