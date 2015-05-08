@@ -223,7 +223,7 @@ public class BreadBoard {
         }
 
         r = Integer.parseInt(number) - 1;
-        System.out.println(r + " " + c);
+        //System.out.println(r + " " + c);
         return this.holeMatrix[r][c];
     }
 
@@ -364,7 +364,7 @@ public class BreadBoard {
                 newRects.add(newContour);
             }
         }
-        System.out.println(newRects.size());
+        //System.out.println(newRects.size());
         rects.addAll(newRects);
 
         return rects;

@@ -13,6 +13,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
@@ -32,9 +33,9 @@ public class MyFrame extends JFrame {
     public volatile ArrayList<Rectangle2D.Double> resistors = null;
     public volatile Rectangle2D.Double resistor = null;
     private static int numOfIter = 0;
-    MinMaxPriorityQueue<RectangleMatch> matches =
-            MinMaxPriorityQueue.maximumSize(3000).create();
+    MinMaxPriorityQueue<RectangleMatch> matches = MinMaxPriorityQueue.maximumSize(3000).create();
     private static MyFrame instance;
+    private volatile static boolean startedTut = false;
 
     //private ArrayList<String> stringsToDraw = new ArrayList<String>();
     private BreadBoard bb;
@@ -62,8 +63,18 @@ public class MyFrame extends JFrame {
             }
         });
 
+        //System.out.println("entering click loop");
+        while(!MyFrame.click) {
+            Thread.sleep(1);
+        }
+        //System.out.println("exited click loop");
+        MyFrame.click = false;
+        startedTut = true;
+
+        //new BreadBoard();
         while(!BreadBoard.getInstance().ready) //wait till breadboard finishes instantiation
                 Thread.sleep(1);
+
 
         //CONFIGURE TUTORIAL
         Circuit circuit = new Circuit();
@@ -132,12 +143,12 @@ public class MyFrame extends JFrame {
         step5.setPart(sw);
         */
 
-        circuit.addStep(step1);
-        circuit.addStep(step2);
-        circuit.addStep(step3);
-        circuit.addStep(step4);
-        circuit.addStep(step5);
-        circuit.addStep(step6);
+//        circuit.addStep(step1);
+//        circuit.addStep(step2);
+//        circuit.addStep(step3);
+//        circuit.addStep(step4);
+//        circuit.addStep(step5);
+//        circuit.addStep(step6);
         circuit.addStep(step7);
         circuit.addStep(step8);
 
@@ -153,11 +164,11 @@ public class MyFrame extends JFrame {
             //verify that the part is in the right place
 
             //temp: stop until click refreshes holes
-            System.out.println("entering click loop");
+            //System.out.println("entering click loop");
             while(!MyFrame.click) {
                 Thread.sleep(1);
             }
-            System.out.println("exited click loop");
+            //System.out.println("exited click loop");
             MyFrame.click = false;
 
 
@@ -279,11 +290,13 @@ public class MyFrame extends JFrame {
         //draw very important parallel line
         drawParallelLine(g,image);
 
-        //update breadboard with the new data
-        bb.refresh(videoCap.getOneMirrorMat());
+        if(startedTut) {
+            //update breadboard with the new data
+            bb.refresh(videoCap.getOneMirrorMat());
 
-        //get new data to draw from updated breadboard
-        rectanglesToDraw = new ArrayList<Rectangle2D>(bb.getRects());
+            //get new data to draw from updated breadboard
+            rectanglesToDraw = new ArrayList<Rectangle2D>(bb.getRects());
+        }
 
         //draw new data
 
@@ -313,9 +326,11 @@ public class MyFrame extends JFrame {
         }
 
         //draw bounding box
-        g.setColor(Color.yellow);
-        Rectangle2D box = bb.getBoundingBox();
-        g.drawRect((int)box.getX(),(int)box.getY(),(int)box.getWidth(),(int)box.getHeight());
+        if(startedTut) {
+            g.setColor(Color.yellow);
+            Rectangle2D box = bb.getBoundingBox();
+            g.drawRect((int) box.getX(), (int) box.getY(), (int) box.getWidth(), (int) box.getHeight());
+        }
 
         //draw instruction string
         float stringPosX = image.getMinX() + 55;
@@ -359,13 +374,17 @@ public class MyFrame extends JFrame {
 
         if(findAResistor){
             Mat retMat = null;
-            //run 30 times
+            stringPosY -= (fm.getHeight() + 3);
+            g.setColor(Color.CYAN);
+            g.setFont(instructionFont.deriveFont(10));
+            g.drawString("Locating resistor...", stringPosX, stringPosY - 10);
+            //run 25 times
             if(numOfIter < 25) {
                 retMat = ContourFinder.getComponentContours(videoCap.getOneMirrorMat(), matches);
                 numOfIter ++;
             }
 
-            if(numOfIter == 25) {
+            else if(numOfIter == 25) {
                 int maxCount = matches.peekFirst().count;
                 resistors = new ArrayList<Rectangle2D.Double>();
 /*
@@ -373,26 +392,34 @@ public class MyFrame extends JFrame {
                     resistors.add(matches.removeFirst().rect);
                 }
   */
-                for(RectangleMatch m : matches){
-                    if(m.count == maxCount)
+                for (RectangleMatch m : matches) {
+                    if (m.count == maxCount)
                         resistors.add(m.rect);
                 }
-                System.out.println();
-            }
-            if(resistors != null) {
-                //g.setColor(Color.white);
-                //g.drawRect((int) resistor.getX(), (int) resistor.getY(), (int) resistor.getWidth(), (int) resistor.getHeight());
-                //Utils.saveBufferedImage(image,"withRes");
-                findAResistor = false;
-                numOfIter = 0;
-                //Core.rectangle(retMat, new org.opencv.core.Point(resistor.x, resistor.y), new org.opencv.core.Point(resistor.x + resistor.width, resistor.y + resistor.height), new Scalar(255, 255, 255));
+
+                if (resistors != null) {
+                    MinMaxPriorityQueue.maximumSize(3000).create();
+                    //g.setColor(Color.white);
+                    //g.drawRect((int) resistor.getX(), (int) resistor.getY(), (int) resistor.getWidth(), (int) resistor.getHeight());
+                    //Utils.saveBufferedImage(image,"withRes");
+                    numOfIter = 0;
+                    findAResistor = false;
+                    //Core.rectangle(retMat, new org.opencv.core.Point(resistor.x, resistor.y), new org.opencv.core.Point(resistor.x + resistor.width, resistor.y + resistor.height), new Scalar(255, 255, 255));
+                }
+                else {
+                    //no resistors found
+                    matches = MinMaxPriorityQueue.maximumSize(3000).create();
+                    numOfIter = 0;
+                    findAResistor = false;
+                }
             }
         }
-
 
         //finalize and draw
         g.finalize();
         g.dispose();
+
+
         ga.drawImage(image, 0, 0, this);
     }
 

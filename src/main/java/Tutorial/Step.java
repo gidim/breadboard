@@ -87,7 +87,7 @@ public class Step {
         Hole to = BreadBoard.getInstance().getHole(part.toCol,part.toRow);
 
         if(part instanceof Wire) { // just check if the holes are in use
-//            if (from.isInUse() && to.isInUse()) { //todo: check if isInUse is working with state
+//            if (from.isInUse() && to.isInUse()) {
 //                System.out.println("wire in right position!");
 //                return true;
 //            }
@@ -104,7 +104,13 @@ public class Step {
             int height = maxy - miny;
 
             Rectangle2D.Double rec = new Rectangle2D.Double(x,y,width,height);
-            Rectangle2D.Double biggerRec = Utils.grow(rec,1.2,0.8);
+            double widthGrowCoeff = 1.2;
+            double heightGrowCoeff = 0.2;
+            if(width > height) {
+                widthGrowCoeff = 0.2;
+                heightGrowCoeff = 1.2;
+            }
+            Rectangle2D.Double biggerRec = Utils.grow(rec,widthGrowCoeff,heightGrowCoeff);
 
             BufferedImage cropped = BreadBoard.getInstance().getBufferedImage();
             cropped = Utils.cropImage(cropped,biggerRec);
@@ -115,8 +121,17 @@ public class Step {
             if(wirePoints.size() == 2) {
                 Point2D p1 = new Point2D.Double(wirePoints.get(0).getX() + biggerRec.getMinX(), wirePoints.get(0).getY() + biggerRec.getMinY());
                 Point2D p2 = new Point2D.Double(wirePoints.get(1).getX() + biggerRec.getMinX(), wirePoints.get(1).getY() + biggerRec.getMinY());
-                Rectangle2D fromRect = Utils.grow(from.getRect(), 0.5, 0.5); //todo: add more to width than to height
-                Rectangle2D toRect = Utils.grow(to.getRect(), 0.5, 0.5);
+                Rectangle2D fromRect = Utils.grow(from.getRect(), 0.7, 0.7);
+                Rectangle2D toRect = Utils.grow(to.getRect(), 0.7, 0.7);
+
+                //save images of from and to holes
+                cropped = BreadBoard.getInstance().getBufferedImage();
+                cropped = Utils.cropImage(cropped,fromRect);
+                Utils.saveBufferedImage(cropped,"fromRect");
+
+                cropped = BreadBoard.getInstance().getBufferedImage();
+                cropped = Utils.cropImage(cropped,toRect);
+                Utils.saveBufferedImage(cropped,"toRect");
 
                 if((fromRect.contains(p1) && toRect.contains(p2)) || ((fromRect.contains(p2) && (toRect.contains(p1))))) {
                     return true;
@@ -146,7 +161,8 @@ public class Step {
                 return true;
         }
 
-        if(part instanceof Resistor) {//todo: check holes AND use resistor detector
+        if(part instanceof Resistor) {
+            //todo: problem with resistor detector. Does it check again second time after failure?
             MyFrame.getInstance().findAResistor = true;
 
             while(MyFrame.getInstance().findAResistor == true){ //wait for it
@@ -166,8 +182,9 @@ public class Step {
 
                 for (Rectangle2D.Double rectToCheck : resistors) {
 
+                    MyFrame.getInstance().resistor = rectToCheck;
                     if ((fromRect.intersects(rectToCheck) && toRect.intersects(rectToCheck))) {
-                        MyFrame.getInstance().resistor = rectToCheck;
+                        //MyFrame.getInstance().resistor = rectToCheck;
                         return true;
                     }
                 }

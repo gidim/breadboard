@@ -93,11 +93,11 @@ public class ContourFinder {
         Imgproc.findContours(imageA, contours, new Mat(), Imgproc.RETR_LIST,Imgproc.CHAIN_APPROX_SIMPLE);
         //Imgproc.drawContours(imageBlurr, contours, 1, new Scalar(0,0,255));
         for(int i=0; i< contours.size();i++){
-           System.out.println(Imgproc.contourArea(contours.get(i)));
+           //System.out.println(Imgproc.contourArea(contours.get(i)));
             Rect rect = Imgproc.boundingRect(contours.get(i));
             Rectangle2D.Double newRect = new Rectangle2D.Double(rect.x,rect.y,rect.width,rect.height);
-            if((Utils.isEqualInRange(rect.width,minWidth,25) && (Utils.isEqualInRange(rect.height,minHeight,5))) ||
-                    (Utils.isEqualInRange(rect.height,minWidth,25) && (Utils.isEqualInRange(rect.width,minHeight,5)))){
+            if((Utils.isEqualInRange(rect.width,minWidth,30) && (Utils.isEqualInRange(rect.height,minHeight,15))) ||
+                    (Utils.isEqualInRange(rect.height,minWidth,30) && (Utils.isEqualInRange(rect.width,minHeight,15)))){
 
                 if(!BreadBoard.getInstance().getBoundingBox().intersects(newRect))
                     continue;
