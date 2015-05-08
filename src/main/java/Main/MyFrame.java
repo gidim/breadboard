@@ -143,12 +143,12 @@ public class MyFrame extends JFrame {
         step5.setPart(sw);
         */
 
-//        circuit.addStep(step1);
-//        circuit.addStep(step2);
-//        circuit.addStep(step3);
-//        circuit.addStep(step4);
-//        circuit.addStep(step5);
-//        circuit.addStep(step6);
+        circuit.addStep(step1);
+        circuit.addStep(step2);
+        circuit.addStep(step3);
+        circuit.addStep(step4);
+        circuit.addStep(step5);
+        circuit.addStep(step6);
         circuit.addStep(step7);
         circuit.addStep(step8);
 
